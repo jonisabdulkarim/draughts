@@ -34,7 +34,8 @@ public class BoardActivity extends AppCompatActivity {
         mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X');
         TAG = this.getClass().getName();
 
-        initialiseFirestore();
+        //initialiseFirestore();
+        getData();
     }
 
     private void initialiseFirestore() {
@@ -92,6 +93,26 @@ public class BoardActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
+    }
+
+    private void getData() {
+        db = FirebaseFirestore.getInstance();
+
+        db.collection("temp")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                Log.d(TAG, doc.getId() + " => " + doc.getData());
                             }
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
