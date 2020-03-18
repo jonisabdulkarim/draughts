@@ -23,9 +23,17 @@ import java.util.Map;
 
 public class BoardActivity extends AppCompatActivity {
 
-    FirebaseFirestore db;
+    // Debug variables
     char mode;
     String TAG;
+
+    // Firestore variables
+    FirebaseFirestore db;
+
+    // Board/RecycleView variables
+    RecyclerView recyclerView;
+    RecyclerView.Adapter adapter;
+    RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +44,10 @@ public class BoardActivity extends AppCompatActivity {
         mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X');
         TAG = this.getClass().getName();
 
-        initialiseFirestore();
+        // initialiseFirestore();
         // getData();
+
+        createView();
     }
 
     private void initialiseFirestore() {
@@ -105,8 +115,21 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private void createView() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 8);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        String[] data = new String[64];
+
+        for (int i = 0; i < data.length; i++) {
+            data[i] = "" + i;
+        }
+
+        // attach view to activity
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        // create and attach grid layout manager to view
+        layoutManager = new GridLayoutManager(getApplicationContext(), 8);
+        recyclerView.setLayoutManager(layoutManager);
+
+        // specify adapter
+        adapter = new MyAdapter(data);
+        recyclerView.setAdapter(adapter);
     }
 }
