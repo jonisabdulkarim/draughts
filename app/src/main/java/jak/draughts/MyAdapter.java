@@ -14,6 +14,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
     private String[] dataSet;
+    private static int greenTileNumber = 1;
 
     public MyAdapter(Context context, String[] dataSet) {
         this.context = context;
@@ -31,24 +32,30 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        holder.textView.setText(dataSet[position]);
-        holder.textView.setBackground(chooseColor(position));
+        boolean isGreen = isGreen(position);
+
+        if (isGreen)
+            holder.textView.setText(greenTileNumber++ + "");
+
+        holder.textView.setBackground(chooseColor(isGreen));
     }
 
-    private ColorDrawable chooseColor(int position) {
+    private ColorDrawable chooseColor(boolean isGreen) {
         ColorDrawable color;
 
-        if (position / 8 % 2 == 0 && position % 2 == 0) {
-            color = new ColorDrawable(context.getColor(R.color.colorBoardBuff));
-        } else if (position / 8 % 2 == 0) {
-            color = new ColorDrawable(context.getColor(R.color.colorBoardGreen));
-        } else if (position % 2 == 0) {
+        if (isGreen) {
             color = new ColorDrawable(context.getColor(R.color.colorBoardGreen));
         } else {
             color = new ColorDrawable(context.getColor(R.color.colorBoardBuff));
         }
 
         return color;
+    }
+
+    private boolean isGreen(int position) {
+        if (position / 8 % 2 != 0 && position % 2 == 0) {
+            return true;
+        } else return position / 8 % 2 == 0 && position % 2 != 0;
     }
 
     @Override
