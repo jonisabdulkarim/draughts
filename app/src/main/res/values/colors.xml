@@ -3,4 +3,8 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="colorBoardBuff">#f5f5f5</color>
+    <color name="colorBoardGreen">#64dd17</color>
+    <color name="colorBoardSelected">#FFFF0000</color>
+    <color name="colorBoardCaptureSelect">#0000FF</color>
 </resources>

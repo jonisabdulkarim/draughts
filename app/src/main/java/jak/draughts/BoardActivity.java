@@ -129,7 +129,7 @@ public class BoardActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify adapter
-        adapter = new MyAdapter(data);
+        adapter = new MyAdapter(getApplicationContext(), data);
         recyclerView.setAdapter(adapter);
     }
 }
