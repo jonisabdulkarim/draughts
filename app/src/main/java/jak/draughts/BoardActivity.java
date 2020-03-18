@@ -2,6 +2,8 @@ package jak.draughts;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -34,8 +36,8 @@ public class BoardActivity extends AppCompatActivity {
         mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X');
         TAG = this.getClass().getName();
 
-        //initialiseFirestore();
-        getData();
+        initialiseFirestore();
+        // getData();
     }
 
     private void initialiseFirestore() {
@@ -102,22 +104,9 @@ public class BoardActivity extends AppCompatActivity {
 
     }
 
-    private void getData() {
-        db = FirebaseFirestore.getInstance();
-
-        db.collection("temp")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot doc : task.getResult()) {
-                                Log.d(TAG, doc.getId() + " => " + doc.getData());
-                            }
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
+    private void createView() {
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getApplicationContext(), 8);
+        recyclerView.setLayoutManager(gridLayoutManager);
     }
 }
