@@ -2,6 +2,7 @@ package jak.draughts;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
     private String[] dataSet;
-    private static int greenTileNumber = 1;
+
+    private static int greenTileNumber = 1; // playable tiles
 
     public MyAdapter(Context context, String[] dataSet) {
         this.context = context;
@@ -24,18 +26,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @NonNull
     @Override
     public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View textView = LayoutInflater.from(parent.getContext())
+        View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_board_tile, parent, false);
 
-        return new MyViewHolder(textView);
+        return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         boolean isGreen = isGreen(position);
 
         if (isGreen)
-            holder.textView.setText(greenTileNumber++ + "");
+            holder.textView.setText(String.valueOf(greenTileNumber++));
 
         holder.textView.setBackground(chooseColor(isGreen));
     }
@@ -53,9 +55,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     private boolean isGreen(int position) {
-        if (position / 8 % 2 != 0 && position % 2 == 0) {
-            return true;
-        } else return position / 8 % 2 == 0 && position % 2 != 0;
+        return position / 8 % 2 == 0 ^ position % 2 == 0;
     }
 
     @Override
@@ -63,14 +63,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         return dataSet.length;
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView textView;
+        TextView textView;
 
-        public MyViewHolder(View itemView) {
+        MyViewHolder(View itemView) {
             super(itemView);
-            textView = (TextView) itemView.findViewById(R.id.item);
+            textView = itemView.findViewById(R.id.item);
+            textView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            onItemClick(textView, getAdapterPosition());
         }
     }
 
+    private void onItemClick(View view, int position) {
+        TextView textView = (TextView) view;
+        Log.i("clickMessage2", "Click in position:"
+                + position + " tile no: " + textView.getText());
+    }
 }
