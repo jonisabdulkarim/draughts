@@ -1,35 +1,25 @@
 package jak.draughts;
 
+import java.util.*;
+
 public class Board {
 
     private static final int BOARD_ROWS = 8;
-    private static final int BOARD_COLUMNS = 8;
 
-    private Tile[][] board;
+    private List<Row> board;
 
     Board() {
-        board = new Tile[BOARD_ROWS][BOARD_COLUMNS];
+        board = new ArrayList<>();
         for (int i = 0; i < BOARD_ROWS; i++) {
-            for (int j = 0; j < BOARD_COLUMNS; j++) {
-                board[i][j] = new Tile();
-            }
+            board.add(new Row());
         }
     }
 
-    Board(char boardType) {
-        board = new Tile[BOARD_ROWS][BOARD_COLUMNS];
-        for (int i = 0; i < BOARD_ROWS; i++) {
-            for (int j = 0; j < BOARD_COLUMNS; j++) {
-                board[i][j] = new Tile();
-            }
-        }
-    }
-
-    public Tile[][] getBoard() {
+    public List<Row> getBoard() {
         return board;
     }
 
-    public void setBoard(Tile[][] board) {
+    public void setBoard(List<Row> board) {
         this.board = board;
     }
 }

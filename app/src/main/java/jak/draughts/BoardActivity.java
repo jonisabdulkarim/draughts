@@ -48,7 +48,7 @@ public class BoardActivity extends AppCompatActivity {
         initialiseFirestore();
 
         Board board = new Board();
-        /*
+
         db.collection("rooms").document("room1")
                 .set(board)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -64,7 +64,7 @@ public class BoardActivity extends AppCompatActivity {
                     }
                 });
 
-         */
+
     }
 
     private void initialiseFirestore() {
