@@ -47,14 +47,13 @@ public class BoardActivity extends AppCompatActivity {
     private void initialiseFirebase() {
         database = FirebaseDatabase.getInstance();
 
-        /*DatabaseReference myRef = database.getReference("message");
-        myRef.setValue("Hello, World!");*/
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue(board);
     }
 
     private void createBoard() {
         board = new Board();
-        String str = Arrays.deepToString(board.getBoard());
-        Log.d(TAG, str);
+        Log.d(TAG, board.getBoard().toString());
     }
 
     private void createView() {
