@@ -19,10 +19,13 @@ public class BoardActivity extends AppCompatActivity {
     // Firebase variables
     FirebaseDatabase database;
 
-    // Board/RecycleView variables
+    // RecycleView variables
     RecyclerView recyclerView;
     RecyclerView.Adapter adapter;
     RecyclerView.LayoutManager layoutManager;
+
+    // Game variables
+    Board board;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +36,20 @@ public class BoardActivity extends AppCompatActivity {
         mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X');
         TAG = this.getClass().getName();
 
+        createBoard();
         createView();
         initialiseFirestore();
-
-        Board board = new Board();
-
     }
 
     private void initialiseFirestore() {
         database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-        myRef.setValue("Hello, World!");
+
+        /*DatabaseReference myRef = database.getReference("message");
+        myRef.setValue("Hello, World!");*/
+    }
+
+    private void createBoard() {
+        board = new Board();
     }
 
     private void createView() {
