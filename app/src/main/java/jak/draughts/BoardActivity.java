@@ -1,25 +1,14 @@
 package jak.draughts;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class BoardActivity extends AppCompatActivity {
 
@@ -27,8 +16,8 @@ public class BoardActivity extends AppCompatActivity {
     char mode;
     String TAG;
 
-    // Firestore variables
-    FirebaseFirestore db;
+    // Firebase variables
+    FirebaseDatabase database;
 
     // Board/RecycleView variables
     RecyclerView recyclerView;
@@ -47,31 +36,18 @@ public class BoardActivity extends AppCompatActivity {
         createView();
         initialiseFirestore();
 
-        /*Board board = new Board();
-        board.getBoard().get(4).getTiles().get(4).setPiece(new Piece("X"));
+        Board board = new Board();
 
-        db.collection("rooms").document("room1")
-                .set(board)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });*/
     }
 
     private void initialiseFirestore() {
-        db = FirebaseFirestore.getInstance();
-
+        database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue("Hello, World!");
     }
 
     private void createView() {
+        // temp data, to be switched to new
         String[] data = new String[64];
 
         for (int i = 0; i < data.length; i++) {
