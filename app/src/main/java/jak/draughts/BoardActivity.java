@@ -47,7 +47,8 @@ public class BoardActivity extends AppCompatActivity {
         createView();
         initialiseFirestore();
 
-        Board board = new Board();
+        /*Board board = new Board();
+        board.getBoard().get(4).getTiles().get(4).setPiece(new Piece("X"));
 
         db.collection("rooms").document("room1")
                 .set(board)
@@ -62,9 +63,7 @@ public class BoardActivity extends AppCompatActivity {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error writing document", e);
                     }
-                });
-
-
+                });*/
     }
 
     private void initialiseFirestore() {
