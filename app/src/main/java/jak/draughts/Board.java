@@ -1,7 +1,5 @@
 package jak.draughts;
 
-import java.util.*;
-
 /**
  * This class serves as the logical representation of
  * a draughtboard and includes core mechanics such as
@@ -21,14 +19,21 @@ public class Board {
 
         for (int row = 0; row < ROWS; row++) {
             for (int col = 0; col < COLUMNS; col++) {
-                if (row <= WHITE_ROW_END && isGreen(row, col)) {
-                    board[row][col] = 1;
-                } else if (row >= RED_ROW_START && isGreen(row, col)) {
-                    board[row][col] = 2;
-                } else {
-                    board[row][col] = 0;
-                }
+                if (row > WHITE_ROW_END && row < RED_ROW_START)
+                    continue; // skip middle rows
+
+                fillBoard(row, col);
             }
+        }
+    }
+
+    private void fillBoard(int row, int col) {
+        if (row <= WHITE_ROW_END && isGreen(row, col)) {
+            board[row][col] = 1;
+        } else if (row >= RED_ROW_START && isGreen(row, col)) {
+            board[row][col] = 2;
+        } else {
+            board[row][col] = 0;
         }
     }
 
