@@ -14,13 +14,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
-    private String[] dataSet;
+    private int[] dataSet;
 
-    private static int greenTileNumber = 1; // playable tiles
+    private int greenTileNumber; // playable tiles
 
-    public MyAdapter(Context context, String[] dataSet) {
+    public MyAdapter(Context context, int[] dataSet) {
         this.context = context;
         this.dataSet = dataSet;
+        greenTileNumber = 1;
     }
 
     @NonNull
@@ -36,8 +37,21 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         boolean isGreen = isGreen(position);
 
-        if (isGreen)
+        if (isGreen) {
             holder.textView.setText(String.valueOf(greenTileNumber++));
+
+            switch (dataSet[position]) {
+                case 0:
+                    holder.textView.setForeground(null);
+                    break;
+                case 1:
+                    holder.textView.setForeground(context.getDrawable(R.drawable.red_man_disc));
+                    break;
+                case 2:
+                    holder.textView.setForeground(context.getDrawable(R.drawable.white_man_disc));
+                    break;
+            }
+        }
 
         holder.textView.setBackground(chooseColor(isGreen));
     }

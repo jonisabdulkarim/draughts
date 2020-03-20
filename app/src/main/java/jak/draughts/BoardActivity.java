@@ -42,6 +42,7 @@ public class BoardActivity extends AppCompatActivity {
         createBoard();
         createView();
         initialiseFirebase();
+        updateView();
     }
 
     private void initialiseFirebase() {
@@ -57,12 +58,8 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private void createView() {
-        // temp data, to be switched to new
-        String[] data = new String[64];
-
-        for (int i = 0; i < data.length; i++) {
-            data[i] = "" + i;
-        }
+        // board data
+        int[] data = board.convertBoard();
 
         // attach view to activity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -74,5 +71,10 @@ public class BoardActivity extends AppCompatActivity {
         // specify adapter
         adapter = new MyAdapter(getApplicationContext(), data);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void updateView() {
+        int[] data = board.convertBoard();
+        adapter.notifyDataSetChanged();
     }
 }
