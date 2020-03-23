@@ -42,14 +42,6 @@ public class BoardActivity extends AppCompatActivity {
 
         createBoard();
         createView();
-        // initialiseFirebase();
-
-        // TODO: remove test data
-        List<List<Integer>> bb = board.getBoard();
-        bb.get(0).set(1, 2);
-        board.setBoard(bb);
-        Log.d(TAG, board.getBoard().toString());
-
         updateView();
     }
 
@@ -77,12 +69,17 @@ public class BoardActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify adapter
-        adapter = new MyAdapter(getApplicationContext(), data);
+        adapter = new MyAdapter(getApplicationContext(), board);
         recyclerView.setAdapter(adapter);
     }
 
     private void updateView() {
-        List<Integer> data = board.convertBoard();
-        adapter.setDataSet(data);
+        // List<Integer> data = board.convertBoard();
+        // adapter.setDataSet(board);
+        // TODO
+    }
+
+    private void gameLoop() {
+        // TODO
     }
 }

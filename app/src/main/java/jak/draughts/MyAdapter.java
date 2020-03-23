@@ -17,12 +17,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
     private List<Integer> dataSet;
-
+    private Board board;
     private int greenTileNumber; // playable tiles
 
-    public MyAdapter(Context context, List<Integer> dataSet) {
+    public MyAdapter(Context context, Board board) {
         this.context = context;
-        this.dataSet = dataSet;
+        this.board = board;
+        this.dataSet = board.convertBoard();
         greenTileNumber = 1;
     }
 
@@ -104,11 +105,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // TODO: test data
         Log.i("clickMessage2", "Click in position:"
                 + position + " tile no: " + textView.getText());
+
+        board.resolveClick(position);
     }
 
     public void setDataSet(List<Integer> dataSet) {
         this.dataSet.clear();
         this.dataSet.addAll(dataSet);
         notifyDataSetChanged();
+        // TODO: consider board method not being update but deleted
+        // TODO: must use clear/addAll as above
     }
 }
