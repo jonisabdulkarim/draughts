@@ -57,12 +57,12 @@ public class Board {
      * which is required to update the disc.
      * @return The board in a one dimensional integer array
      */
-    public int[] convertBoard() {
-        int[] convertedBoard = new int[COLUMNS * ROWS];
+    public List<Integer> convertBoard() {
+        List<Integer> convertedBoard = new ArrayList<>(COLUMNS * ROWS);
 
-        for (int i = 0, k = 0; i < ROWS; i++) {
+        for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                convertedBoard[k++] = board.get(i).get(j);
+                convertedBoard.add(board.get(i).get(j));
             }
         }
 

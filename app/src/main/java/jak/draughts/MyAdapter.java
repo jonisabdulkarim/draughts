@@ -11,14 +11,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
-    private int[] dataSet;
+    private List<Integer> dataSet;
 
     private int greenTileNumber; // playable tiles
 
-    public MyAdapter(Context context, int[] dataSet) {
+    public MyAdapter(Context context, List<Integer> dataSet) {
         this.context = context;
         this.dataSet = dataSet;
         greenTileNumber = 1;
@@ -39,21 +41,24 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
         if (isGreen) {
             holder.textView.setText(String.valueOf(greenTileNumber++));
-
-            switch (dataSet[position]) {
-                case 0:
-                    holder.textView.setForeground(null);
-                    break;
-                case 1:
-                    holder.textView.setForeground(context.getDrawable(R.drawable.red_man_disc));
-                    break;
-                case 2:
-                    holder.textView.setForeground(context.getDrawable(R.drawable.white_man_disc));
-                    break;
-            }
         }
-
         holder.textView.setBackground(chooseColor(isGreen));
+
+        chooseDisc(holder, position);
+    }
+
+    private void chooseDisc(@NonNull MyViewHolder holder, int position) {
+        switch (dataSet.get(position)) {
+            case 0:
+                holder.textView.setForeground(null);
+                break;
+            case 1:
+                holder.textView.setForeground(context.getDrawable(R.drawable.red_man_disc));
+                break;
+            case 2:
+                holder.textView.setForeground(context.getDrawable(R.drawable.white_man_disc));
+                break;
+        }
     }
 
     private ColorDrawable chooseColor(boolean isGreen) {
@@ -74,7 +79,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public int getItemCount() {
-        return dataSet.length;
+        return dataSet.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -95,7 +100,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private void onItemClick(View view, int position) {
         TextView textView = (TextView) view;
+
+        // TODO: test data
         Log.i("clickMessage2", "Click in position:"
                 + position + " tile no: " + textView.getText());
+    }
+
+    public void setDataSet(List<Integer> dataSet) {
+        this.dataSet.clear();
+        this.dataSet.addAll(dataSet);
+        notifyDataSetChanged();
     }
 }

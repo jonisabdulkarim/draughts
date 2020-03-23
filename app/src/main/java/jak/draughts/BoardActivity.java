@@ -1,17 +1,17 @@
 package jak.draughts;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.Arrays;
+import java.util.List;
 
 public class BoardActivity extends AppCompatActivity {
 
@@ -24,7 +24,8 @@ public class BoardActivity extends AppCompatActivity {
 
     // RecycleView variables
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    //RecyclerView.Adapter adapter;
+    MyAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
 
     // Game variables
@@ -41,25 +42,32 @@ public class BoardActivity extends AppCompatActivity {
 
         createBoard();
         createView();
-        initialiseFirebase();
+        // initialiseFirebase();
+
+        // TODO: remove test data
+        List<List<Integer>> bb = board.getBoard();
+        bb.get(0).set(1, 2);
+        board.setBoard(bb);
+        Log.d(TAG, board.getBoard().toString());
+
         updateView();
     }
 
     private void initialiseFirebase() {
         database = FirebaseDatabase.getInstance();
 
+        // TODO: remove test data
         DatabaseReference myRef = database.getReference("message");
         myRef.setValue(board);
     }
 
     private void createBoard() {
         board = new Board();
-        Log.d(TAG, board.getBoard().toString());
     }
 
     private void createView() {
-        // board data
-        int[] data = board.convertBoard();
+        // board data in 1d list
+        List<Integer> data = board.convertBoard();
 
         // attach view to activity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -74,7 +82,7 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private void updateView() {
-        int[] data = board.convertBoard();
-        adapter.notifyDataSetChanged();
+        List<Integer> data = board.convertBoard();
+        adapter.setDataSet(data);
     }
 }
