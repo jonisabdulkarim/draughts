@@ -44,8 +44,7 @@ public class Board {
     }
 
     public void resolveClick(int position) {
-        int row = position / 8;
-        int column = position % 8;
+        Coordinates coords = new Coordinates(position);
 
         // TODO: called by adapter
     }
