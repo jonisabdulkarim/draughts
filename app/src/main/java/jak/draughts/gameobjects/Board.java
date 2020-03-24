@@ -1,9 +1,11 @@
-package jak.draughts;
+package jak.draughts.gameobjects;
 
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import jak.draughts.Coordinates;
 
 /**
  * This class serves as the logical representation of

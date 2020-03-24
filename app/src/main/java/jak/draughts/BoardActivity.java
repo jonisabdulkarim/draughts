@@ -2,7 +2,6 @@ package jak.draughts;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -12,6 +11,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+
+import jak.draughts.gameobjects.Board;
 
 public class BoardActivity extends AppCompatActivity {
 
