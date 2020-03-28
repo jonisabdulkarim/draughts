@@ -1,7 +1,5 @@
 package jak.draughts.gameobjects;
 
-import jak.draughts.gameobjects.pieces.Piece;
-
 public class Tile {
 
     private Piece piece;
@@ -26,7 +24,24 @@ public class Tile {
         this.piece = null;
     }
 
-    public void getPieceId() {
-        // TODO
+    /**
+     * This method is used in a loop to convert the board
+     * of characters into numbers
+     * @return integer between 0 and 5
+     */
+    public int getPieceId() {
+        if (!hasPiece()) return 0;
+        switch (getPiece().getType()) {
+            case 'A':
+                return 1;
+            case 'B':
+                return 2;
+            case 'C':
+                return 3;
+            case 'D':
+                return 4;
+            default:
+                throw new IllegalStateException();
+        }
     }
 }

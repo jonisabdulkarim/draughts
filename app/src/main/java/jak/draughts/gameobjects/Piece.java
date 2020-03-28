@@ -1,9 +1,17 @@
-package jak.draughts.gameobjects.pieces;
+package jak.draughts.gameobjects;
 
 import jak.draughts.Coordinates;
 
 public class Piece {
 
+    /**
+     * Specifies what piece is in this tile.
+     * A single letter:
+     *  - A: red man
+     *  - B: red king
+     *  - C: white man
+     *  - D: white king
+     */
     private char type;
     private Coordinates coords;
 
