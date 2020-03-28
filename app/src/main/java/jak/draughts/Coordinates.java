@@ -1,15 +1,15 @@
 package jak.draughts;
 
-public class Position {
+public class Coordinates {
     private int x;
     private int y;
 
-    public Position(int position) {
+    public Coordinates(int position) {
         this.x = position / 8;
         this.y = position % 8;
     }
 
-    public Position(int x, int y) {
+    public Coordinates(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -28,5 +28,13 @@ public class Position {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public boolean isGreen() {
+        return getX() % 2 == 0 ^ getY() % 2 == 0;
+    }
+
+    public static boolean isGreen(int row, int col) {
+        return row % 2 == 0 ^ col % 2 == 0;
     }
 }

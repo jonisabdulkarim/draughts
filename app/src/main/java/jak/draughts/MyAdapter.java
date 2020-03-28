@@ -113,9 +113,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     public void setDataSet(List<Integer> dataSet) {
         this.dataSet.clear();
-        this.dataSet.addAll(dataSet);
+        this.dataSet.addAll(board.convertBoard());
         notifyDataSetChanged();
-        // TODO: consider board method not being update but deleted
-        // TODO: must use clear/addAll as above
+        // TODO: test above code
     }
 }

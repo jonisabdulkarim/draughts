@@ -3,7 +3,7 @@ package jak.draughts.gameobjects;
 import java.util.ArrayList;
 import java.util.List;
 
-import jak.draughts.Position;
+import jak.draughts.Coordinates;
 
 /**
  * This class serves as the logical representation of
@@ -25,8 +25,8 @@ public class Board {
 
     private List<List<Integer>> board;
     private boolean turn; // true for red's turn, false for white
-    private boolean selected; // indicates if there is a piece selected
-    private Position selectedPiece; // indicates position selected piece
+    private boolean hasSelectedPiece; // indicates if there is a piece selected
+    private Coordinates selectedPiece; // indicates position selected piece
 
     /**
      * Returns a Board object, containing a 2D list of integers.
@@ -37,13 +37,8 @@ public class Board {
     public Board() {
         createBoard();
         turn = true; // red starts first
-        selected = false; // no piece is selected
-    }
-
-    public void resolveClick(int position) {
-        Position coords = new Position(position);
-
-        // TODO: called by adapter
+        hasSelectedPiece = false; // no piece is selected
+        selectedPiece = null;
     }
 
     private void createBoard() {
@@ -57,17 +52,52 @@ public class Board {
     }
 
     private void fillBoard(int row, int col) {
-        if (row <= RED_ROW_START && isGreen(row, col)) {
+        if (row <= RED_ROW_START && Coordinates.isGreen(row, col)) {
             board.get(row).add(RED_MAN);
-        } else if (row >= WHITE_ROW_END && isGreen(row, col)) {
+        } else if (row >= WHITE_ROW_END && Coordinates.isGreen(row, col)) {
             board.get(row).add(WHITE_MAN);
         } else {
             board.get(row).add(EMPTY_TILE);
         }
     }
 
-    private boolean isGreen(int row, int col) {
-        return row % 2 == 0 ^ col % 2 == 0;
+    /**
+     * resolveClick() is called by the adapter to notify the Board object
+     * that a user has pressed a tile in that board. The method will confirm
+     * if the tile selected leads to any changes, and if so, will call the
+     * relevant methods.
+     *
+     * The BoardActivity class will continually check for changes in Board
+     * and send an updated dataSet to the adapter when necessary.
+     * @param position integer between 0 and 63; the 1D tile position
+     */
+    public void resolveClick(int position) {
+        Coordinates coords = new Coordinates(position);
+
+        // clicked on white/unplayable tiles -> deselect
+        if (!coords.isGreen()) {
+            deselect();
+            return;
+        }
+
+        int piece = getPiece(coords);
+        if (hasSelectedPiece) {
+            if (piece == EMPTY_TILE) {
+                deselect();
+            }
+        } else {
+
+        }
+        // TODO: called by adapter
+    }
+
+    private void deselect() {
+        hasSelectedPiece = false;
+        selectedPiece = null;
+    }
+
+    private Integer getPiece(Coordinates coordinates) {
+        return board.get(coordinates.getX()).get(coordinates.getY());
     }
 
     /**
