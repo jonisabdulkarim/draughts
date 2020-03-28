@@ -1,11 +1,9 @@
 package jak.draughts.gameobjects;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import jak.draughts.Coordinates;
+import jak.draughts.Position;
 
 /**
  * This class serves as the logical representation of
@@ -46,7 +44,7 @@ public class Board {
     }
 
     public void resolveClick(int position) {
-        Coordinates coords = new Coordinates(position);
+        Position coords = new Position(position);
 
         // TODO: called by adapter
     }

@@ -1,15 +1,15 @@
 package jak.draughts;
 
-public class Coordinates {
+public class Position {
     private int x;
     private int y;
 
-    public Coordinates(int position) {
+    public Position(int position) {
         this.x = position / 8;
         this.y = position % 8;
     }
 
-    public Coordinates(int x, int y) {
+    public Position(int x, int y) {
         this.x = x;
         this.y = y;
     }
