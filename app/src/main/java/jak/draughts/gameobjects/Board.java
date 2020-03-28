@@ -24,8 +24,9 @@ public class Board {
     private static final int WHITE_MAN = 2;
 
     private List<List<Integer>> board;
-    private boolean turn; // true for red, false for white
-    private boolean selected;
+    private boolean turn; // true for red's turn, false for white
+    private boolean selected; // indicates if there is a piece selected
+    private Position selectedPiece; // indicates position selected piece
 
     /**
      * Returns a Board object, containing a 2D list of integers.
@@ -34,6 +35,18 @@ public class Board {
      * the bottom.
      */
     public Board() {
+        createBoard();
+        turn = true; // red starts first
+        selected = false; // no piece is selected
+    }
+
+    public void resolveClick(int position) {
+        Position coords = new Position(position);
+
+        // TODO: called by adapter
+    }
+
+    private void createBoard() {
         board = new ArrayList<>(ROWS);
         for (int row = 0; row < ROWS; row++) {
             board.add(new ArrayList<Integer>(COLUMNS));
@@ -41,12 +54,6 @@ public class Board {
                 fillBoard(row, col);
             }
         }
-    }
-
-    public void resolveClick(int position) {
-        Position coords = new Position(position);
-
-        // TODO: called by adapter
     }
 
     private void fillBoard(int row, int col) {
