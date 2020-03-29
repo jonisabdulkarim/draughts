@@ -1,25 +1,18 @@
 package jak.draughts;
 
-import androidx.annotation.NonNull;
+import android.content.Intent;
+import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.util.Log;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import java.util.List;
 
-import java.util.HashMap;
-import java.util.Map;
+import jak.draughts.gameobjects.Board;
 
 public class BoardActivity extends AppCompatActivity {
 
@@ -27,13 +20,17 @@ public class BoardActivity extends AppCompatActivity {
     char mode;
     String TAG;
 
-    // Firestore variables
-    FirebaseFirestore db;
+    // Firebase variables
+    FirebaseDatabase database;
 
-    // Board/RecycleView variables
+    // RecycleView variables
     RecyclerView recyclerView;
-    RecyclerView.Adapter adapter;
+    //RecyclerView.Adapter adapter;
+    MyAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
+
+    // Game variables
+    Board board;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,39 +41,26 @@ public class BoardActivity extends AppCompatActivity {
         mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X');
         TAG = this.getClass().getName();
 
+        createBoard();
         createView();
-        initialiseFirestore();
-
-        /*Board board = new Board();
-        board.getBoard().get(4).getTiles().get(4).setPiece(new Piece("X"));
-
-        db.collection("rooms").document("room1")
-                .set(board)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error writing document", e);
-                    }
-                });*/
+        updateView();
     }
 
-    private void initialiseFirestore() {
-        db = FirebaseFirestore.getInstance();
+    private void initialiseFirebase() {
+        database = FirebaseDatabase.getInstance();
 
+        // TODO: remove test data
+        DatabaseReference myRef = database.getReference("message");
+        myRef.setValue(board);
+    }
+
+    private void createBoard() {
+        board = new Board();
     }
 
     private void createView() {
-        String[] data = new String[64];
-
-        for (int i = 0; i < data.length; i++) {
-            data[i] = "" + i;
-        }
+        // board data in 1d list
+        List<Integer> data = board.convertBoard();
 
         // attach view to activity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -86,7 +70,17 @@ public class BoardActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify adapter
-        adapter = new MyAdapter(getApplicationContext(), data);
+        adapter = new MyAdapter(getApplicationContext(), board);
         recyclerView.setAdapter(adapter);
+    }
+
+    private void updateView() {
+        // List<Integer> data = board.convertBoard();
+        // adapter.setDataSet(board);
+        // TODO
+    }
+
+    private void gameLoop() {
+        // TODO
     }
 }
