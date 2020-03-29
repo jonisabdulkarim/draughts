@@ -82,8 +82,11 @@ public class Board {
 
         int piece = getPiece(coords);
         if (hasSelectedPiece) {
-            if (piece == EMPTY_TILE) {
+            if (piece != EMPTY_TILE) {
+                // click on pieces after selecting one -> deselect
                 deselect();
+            } else {
+
             }
         } else {
 
