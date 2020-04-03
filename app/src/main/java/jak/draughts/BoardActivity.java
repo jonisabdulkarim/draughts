@@ -7,8 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public class BoardActivity extends AppCompatActivity {
     String TAG;
 
     // Firebase variables
-    FirebaseDatabase database;
+    FirebaseFirestore database;
 
     // RecycleView variables
     RecyclerView recyclerView;
@@ -44,14 +43,14 @@ public class BoardActivity extends AppCompatActivity {
         createBoard();
         createView();
         updateView();
+
+        initialiseFirebase(); // TODO: check
     }
 
     private void initialiseFirebase() {
-        database = FirebaseDatabase.getInstance();
+        database = FirebaseFirestore.getInstance();
 
-        // TODO: remove test data
-        DatabaseReference myRef = database.getReference("message");
-        myRef.setValue(board);
+        // TODO: create test data
     }
 
     private void createBoard() {
