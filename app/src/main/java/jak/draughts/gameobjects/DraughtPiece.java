@@ -1,12 +1,15 @@
 package jak.draughts.gameobjects;
 
+import jak.draughts.Coordinates;
+
 public class DraughtPiece extends Piece {
     private boolean isRed;
     private boolean isKing;
 
-    public DraughtPiece(boolean isRed, boolean isKing) {
-        this.isRed = isRed;
-        this.isKing = isKing;
+    public DraughtPiece(boolean isRed, boolean isKing, Coordinates coords) {
+        setRed(isRed);
+        setKing(isKing);
+        setCoordinates(coords);
     }
 
     public boolean isRed() {
