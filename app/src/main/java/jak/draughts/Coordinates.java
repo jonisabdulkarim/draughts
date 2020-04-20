@@ -3,12 +3,14 @@ package jak.draughts;
 import androidx.annotation.Nullable;
 
 /**
- * The purpose of this class is to store the position of a tile or piece, convert
- * the position from that of a 1D array to 2D array, and to check if this
- * position is within a green tile.
- *
+ * The primary purpose of this class is to store the coordinates of a tile that may have been
+ * clicked or to quickly determine the location of a team's pieces. For this purpose, the class acts
+ * as a data structure holding the two indices of a 2D Tile array. The secondary purpose is to
+ * quickly convert between the coordinates and the relevant index in a 1D array.
+ * <p>
  * Coordinates are always stored in Piece objects for quick access to all of
- * a team's pieces on a board. This class assumes there are 8 columns, 8 rows and 64 tiles.
+ * a team's pieces on a board. This class assumes there are 8 columns, 8 rows and 64 tiles
+ * in a board.
  */
 public class Coordinates {
     private int x;
@@ -16,7 +18,8 @@ public class Coordinates {
 
     /**
      * Creates a Coordinates object according to the index of a tile in a 1D array.
-     * @param position - the index from a 1D array
+     *
+     * @param position the index from a 1D array
      */
     public Coordinates(int position) {
         setPosition(position);
@@ -24,17 +27,18 @@ public class Coordinates {
 
     /**
      * Creates a Coordinates object according to the row and column of a tile
-     * @param x - the row of a tile
-     * @param y - the column of a tile
+     *
+     * @param x the row of a tile
+     * @param y the column of a tile
      */
     public Coordinates(int x, int y) {
         setX(x);
         setY(y);
     }
 
-
     /**
      * Calculates the index of a 1D array according to this object's x and y values
+     *
      * @return the index in a 1D array
      */
     public int getPosition() {
@@ -43,7 +47,8 @@ public class Coordinates {
 
     /**
      * Sets the coordinates of this object according to the index of a tile in a 1D array.
-     * @param position - the index from a 1D array
+     *
+     * @param position the index from a 1D array
      */
     public void setPosition(int position) {
         setX(position / 8);
@@ -69,19 +74,20 @@ public class Coordinates {
     /**
      * Used to determine whether a tile in this position should be painted green,
      * and thus whether it is a playable tile i.e in Draughts.
+     *
      * @return true if tile is green, false otherwise
      */
     public boolean isGreen() {
         return getX() % 2 == 0 ^ getY() % 2 == 0;
     }
 
-
     /**
      * Used to quickly determine whether a tile in this position should be painted green,
      * without the need to create a Coordinates object.
-     * @param row - the row containing this tile
-     * @param col - the column containing this tile
-     * @return true if this is green, false otherwise
+     *
+     * @param row the row containing this tile
+     * @param col the column containing this tile
+     * @return true if tile is green, false otherwise
      */
     public static boolean isGreen(int row, int col) {
         return row % 2 == 0 ^ col % 2 == 0;
@@ -89,7 +95,8 @@ public class Coordinates {
 
     /**
      * Determines whether two objects are both Coordinates with the same x and y values.
-     * @param obj - another object to compare this coordinate to
+     *
+     * @param obj another object to compare this coordinate to
      * @return true if the other object is also an instance of a Coordinates class
      * AND the x and y values of both objects are equal, false otherwise
      */

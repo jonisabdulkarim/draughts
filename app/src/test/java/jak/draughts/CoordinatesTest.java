@@ -83,4 +83,13 @@ public class CoordinatesTest {
         assertTrue(Coordinates.isGreen(0, 1));
         assertTrue(Coordinates.isGreen(1, 0));
     }
+
+    @Test
+    public void testEquals() {
+        assertFalse(zero_zero.equals(zero_one));
+        zero_one = null;
+        assertFalse(zero_zero.equals(zero_one));
+        zero_one = new Coordinates(0);
+        assertTrue(zero_zero.equals(zero_one));
+    }
 }
