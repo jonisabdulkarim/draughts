@@ -58,7 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
             case 1:
                 holder.textView.setForeground(context.getDrawable(R.drawable.red_man_disc));
                 break;
-            case 2:
+            case 3:
                 holder.textView.setForeground(context.getDrawable(R.drawable.white_man_disc));
                 break;
         }

@@ -13,11 +13,6 @@ public class DraughtBoard extends Board {
     private static final int RED_ROW_START = 2;
     private static final int WHITE_ROW_END = 5;
 
-    // constants for tile pieces
-    private static final int EMPTY_TILE = 0;
-    private static final int RED_MAN = 1;
-    private static final int WHITE_MAN = 2;
-
     private List<List<DraughtTile>> board;
 
     public DraughtBoard() {
