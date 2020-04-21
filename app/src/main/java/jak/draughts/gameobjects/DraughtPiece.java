@@ -2,6 +2,11 @@ package jak.draughts.gameobjects;
 
 import jak.draughts.Coordinates;
 
+/**
+ * A concrete sub-class of <tt>Piece</tt>, representing all the different types of pieces in
+ * Draughts. Each type is differentiated based on two factors: the colour (red or white) and
+ * status (man or king). In total, there are four types of pieces in Draughts.
+ */
 public class DraughtPiece extends Piece {
     private boolean isRed;
     private boolean isKing;
