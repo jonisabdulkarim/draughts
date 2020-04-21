@@ -12,6 +12,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 
 import jak.draughts.gameobjects.Board;
+import jak.draughts.gameobjects.DraughtBoard;
 
 public class BoardActivity extends AppCompatActivity {
 
@@ -44,7 +45,7 @@ public class BoardActivity extends AppCompatActivity {
         createView();
         updateView();
 
-        initialiseFirebase(); // TODO: check
+        // initialiseFirebase(); // TODO: check
     }
 
     private void initialiseFirebase() {
@@ -54,12 +55,12 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private void createBoard() {
-        board = new Board();
+        board = new DraughtBoard();
     }
 
     private void createView() {
         // board data in 1d list
-        List<Integer> data = board.convertBoard();
+        List<Integer> data = board.getDataSet();
 
         // attach view to activity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);

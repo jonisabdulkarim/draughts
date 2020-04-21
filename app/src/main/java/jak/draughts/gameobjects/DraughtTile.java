@@ -18,12 +18,12 @@ public class DraughtTile extends Tile {
      */
     @Override
     public DraughtPiece getPiece() {
-        return (DraughtPiece) super.piece;
+        return (DraughtPiece) super.getPiece();
     }
 
     /**
-     * Returns a unique number depending on whether a <tt>DraughtPiece</tt> object is contained
-     * within this tile, and if true,
+     * Returns a unique number depending on what kind of <tt>DraughtPiece</tt> object
+     * is contained within this tile
      *
      * @return 0 if empty, 1 for red man, 2 for red king, 3 for white man, 4 for white king
      */

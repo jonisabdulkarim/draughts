@@ -1,5 +1,7 @@
 package jak.draughts.gameobjects;
 
+import androidx.annotation.CallSuper;
+
 /**
  * Each object of this class represents an individual tile in a <tt>Board</tt>.
  * <p>
@@ -10,7 +12,7 @@ package jak.draughts.gameobjects;
  * Each tile can only hold one <tt>Piece</tt>.
  */
 abstract class Tile {
-    protected Piece piece;
+    private Piece piece;
 
     public boolean isEmpty() {
         return piece == null;
@@ -25,12 +27,15 @@ abstract class Tile {
     }
 
     /**
-     * Abstract method that must be implemented so that it returns the correct sub-type of
+     * Method that must be overridden so that it returns the correct sub-type of
      * <tt>Piece</tt> that this tile contains.
      *
      * @return an object of sub-type <tt>Piece</tt>
      */
-    public abstract Piece getPiece();
+    @CallSuper
+    public Piece getPiece() {
+        return piece;
+    }
 
     /**
      * Abstract method that must be implemented so that it returns a unique identifier for each

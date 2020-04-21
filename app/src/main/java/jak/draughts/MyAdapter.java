@@ -25,7 +25,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     public MyAdapter(Context context, Board board) {
         this.context = context;
         this.board = board;
-        this.dataSet = board.convertBoard();
+        this.dataSet = board.getDataSet();
         greenTileNumber = 1;
     }
 
@@ -108,12 +108,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Log.i("clickMessage2", "Click in position:"
                 + position + " tile no: " + textView.getText());
 
-        board.resolveClick(position);
+        // board.resolveClick(position);
     }
 
     public void setDataSet(List<Integer> dataSet) {
         this.dataSet.clear();
-        this.dataSet.addAll(board.convertBoard());
+        this.dataSet.addAll(board.getDataSet());
         notifyDataSetChanged();
         // TODO: test above code
     }
