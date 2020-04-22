@@ -12,8 +12,9 @@ public abstract class Board {
     private List<Integer> dataSet;
 
     /**
-     * Abstract method that when implemented, will create 1D list of integers from the
-     * board and store it in the dataSet variable.
+     * Abstract method that, when implemented, will create 1D list of integers from the
+     * board and store it in the dataSet variable. The result must be stored using the
+     * setDataSet(...) method.
      */
     public abstract void createDataSet();
 
