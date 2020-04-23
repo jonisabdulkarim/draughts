@@ -18,6 +18,9 @@ public abstract class Board {
      * Abstract method that, when implemented, will create 1D list of integers from the
      * board and store it in the dataSet variable. The result must be stored using the
      * setDataSet(...) method.
+     * <p>
+     * The adapter and database must run this method before attempting to get the
+     * dataSet or the backgroundSet, or else the data may be outdated.
      */
     public abstract void createDataSet();
 

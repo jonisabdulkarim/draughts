@@ -1,5 +1,6 @@
 package jak.draughts;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 /**
@@ -108,5 +109,11 @@ public class Coordinates {
         } else {
             return false;
         }
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "(" + getX() + ", " + getY() + ")";
     }
 }

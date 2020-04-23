@@ -1,5 +1,7 @@
 package jak.draughts.gameobjects;
 
+import androidx.annotation.VisibleForTesting;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,35 +79,52 @@ public class DraughtBoard extends Board {
      * Convenience method that removes the piece from its old location and puts it
      * in the new location
      *
-     * @param piece the piece to be moved
-     * @param newCoordinates location of the tile to be moved to
+     * @param piece     the piece to be moved
+     * @param newCoords location of the tile to be moved to
      * @throws IllegalStateException if tile already contains a piece
      */
-    public void move(DraughtPiece piece, Coordinates newCoordinates) {
+    public void move(DraughtPiece piece, Coordinates newCoords) {
         remove(piece);
-        put(piece, newCoordinates);
+        put(piece, newCoords);
     }
 
     /**
-     * Places the piece at the tile with the given coordinates. The tile
-     * must be empty, else an exception will be raised.
+     * Convenience method that removes the piece from its old location and puts it
+     * in the new location
      *
-     * @param piece the piece to be placed on the board
-     * @param coordinates location of the tile
+     * @param oldCoords location of the tile to be moved from
+     * @param newCoords location of the tile to be moved to
+     */
+    public void move(Coordinates oldCoords, Coordinates newCoords) {
+        DraughtPiece piece = remove(oldCoords);
+        put(piece, newCoords);
+    }
+
+    /**
+     * Places the piece at the tile with the given coordinates. The piece's
+     * coordinates will be updated. This method does not remove the piece
+     * from its previous location, use the move() method instead. The tile must
+     * be empty, else an <tt>IllegalStateException</tt> will be raised.
+     *
+     * @param piece  the piece to be placed on the board
+     * @param coords location of the tile
      * @throws IllegalStateException if tile already contains a piece
      */
-    public void put(DraughtPiece piece, Coordinates coordinates) {
-        DraughtTile tile = getTile(coordinates);
+    public void put(DraughtPiece piece, Coordinates coords) {
+        DraughtTile tile = getTile(coords);
         if (tile.isEmpty()) {
             tile.setPiece(piece);
+            piece.setCoordinates(coords);
         } else {
-            throw new IllegalStateException("Tile at given coordinates already contains a piece");
+            throw new IllegalStateException("Tile" +
+                    coords + " already contains a piece");
         }
     }
 
     /**
      * Removes and returns a piece from the tile at the given coordinates.
-     * If no piece is present at the tile, null is returned.
+     * Also sets the piece's coordinates to null. If no piece is present at
+     * the tile, null is returned.
      *
      * @param coordinates location of the tile
      * @return the removed piece if it was present, null otherwise
@@ -114,11 +133,13 @@ public class DraughtBoard extends Board {
         DraughtTile tile = getTile(coordinates);
         DraughtPiece piece = tile.getPiece();
         tile.removePiece();
+        piece.setCoordinates(null);
         return piece;
     }
 
     /**
-     * Removes the given piece from the board.
+     * Removes the given piece from the board. Also sets the piece's
+     * coordinates to null.
      *
      * @param piece the piece to be removed from the board
      */
@@ -126,6 +147,7 @@ public class DraughtBoard extends Board {
         Coordinates coordinates = piece.getCoordinates();
         DraughtTile tile = getTile(coordinates);
         tile.removePiece();
+        piece.setCoordinates(null);
     }
 
     /**
@@ -143,6 +165,7 @@ public class DraughtBoard extends Board {
         return board.get(coordinates.getX()).get(coordinates.getY());
     }
 
+    @VisibleForTesting
     public List<List<DraughtTile>> getBoard() {
         return board;
     }

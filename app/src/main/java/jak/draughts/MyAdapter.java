@@ -18,15 +18,15 @@ import jak.draughts.gameobjects.Board;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
-    private List<Integer> dataSet;
     private Board board;
-    private int greenTileNumber; // playable tiles
+    private List<Integer> dataSet;
+    private List<TileColor> backgroundSet;
 
     public MyAdapter(Context context, Board board) {
         this.context = context;
         this.board = board;
         this.dataSet = board.getDataSet();
-        greenTileNumber = 1;
+        this.backgroundSet = board.getBackgroundSet();
     }
 
     @NonNull
@@ -40,15 +40,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
-        /*
-        boolean isGreen = isGreen(position);
-
-        if (isGreen) {
-            holder.textView.setText(String.valueOf(greenTileNumber++));
-        }*/
-        // holder.textView.setBackground(chooseColor(isGreen));
-        holder.textView.setBackground(chooseColor(board.getBackgroundSet().get(position)));
-        // holder.textView.setBackground(board.getBackgroundSet().get(position));
+        chooseColor(holder, position);
 
         chooseDisc(holder, position);
     }
@@ -67,21 +59,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    private ColorDrawable chooseColor(TileColor tileColor) {
-        ColorDrawable color;
+    private void chooseColor(@NonNull MyViewHolder holder, int position) {
+        holder.textView.setBackground(chooseColor(position));
+    }
 
-        switch(tileColor) {
+    private ColorDrawable chooseColor(int position) {
+        switch (board.getBackgroundSet().get(position)) {
             case GREEN:
-                color = new ColorDrawable(context.getColor(R.color.colorBoardGreen));
-                break;
+                return new ColorDrawable(context.getColor(R.color.colorBoardGreen));
             case WHITE:
-                color = new ColorDrawable(context.getColor(R.color.colorBoardBuff));
-                break;
+                return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
             default:
                 throw new IllegalStateException("Illegal tile background");
         }
-
-        return color;
     }
 
     private boolean isGreen(int position) {
@@ -119,9 +109,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         // board.resolveClick(position);
     }
 
-    public void setDataSet(List<Integer> dataSet) {
+    public void update() {
+        board.createDataSet();
         this.dataSet.clear();
         this.dataSet.addAll(board.getDataSet());
+        this.backgroundSet.clear();
+        this.backgroundSet.addAll(board.getBackgroundSet());
         notifyDataSetChanged();
         // TODO: test above code
     }

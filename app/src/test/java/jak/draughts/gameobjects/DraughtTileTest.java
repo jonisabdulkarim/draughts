@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static jak.draughts.TileColor.*;
 
 public class DraughtTileTest {
 
@@ -20,11 +21,11 @@ public class DraughtTileTest {
 
     @Before
     public void setUp() {
-        emptyTile = new DraughtTile(null);
-        redManTile = new DraughtTile(redMan);
-        redKingTile = new DraughtTile(redKing);
-        whiteManTile = new DraughtTile(whiteMan);
-        whiteKingTile = new DraughtTile(whiteKing);
+        emptyTile = new DraughtTile(null, WHITE);
+        redManTile = new DraughtTile(redMan, GREEN);
+        redKingTile = new DraughtTile(redKing, GREEN);
+        whiteManTile = new DraughtTile(whiteMan, GREEN);
+        whiteKingTile = new DraughtTile(whiteKing, GREEN);
     }
 
     @Test
@@ -68,5 +69,27 @@ public class DraughtTileTest {
         assertEquals(2, redKingTile.getType());
         assertEquals(3, whiteManTile.getType());
         assertEquals(4, whiteKingTile.getType());
+    }
+
+    @Test
+    public void getTileColor() {
+        assertEquals(WHITE, emptyTile.getTileColor());
+        assertEquals(GREEN, redManTile.getTileColor());
+    }
+
+    @Test
+    public void setTileColor() {
+        assertNotEquals(GREEN, emptyTile.getTileColor());
+        emptyTile.setTileColor(GREEN);
+        assertEquals(GREEN, emptyTile.getTileColor());
+    }
+
+    @Test
+    public void clearSelection() {
+        assertNotEquals(GREEN, emptyTile.getTileColor());
+        emptyTile.setTileColor(GREEN);
+        assertEquals(GREEN, emptyTile.getTileColor());
+        emptyTile.clearSelection();
+        assertEquals(WHITE, emptyTile.getTileColor());
     }
 }
