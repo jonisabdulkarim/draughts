@@ -1,4 +1,4 @@
-package jak.draughts.gameobjects;
+package jak.draughts.game.gameobjects;
 
 import jak.draughts.Coordinates;
 

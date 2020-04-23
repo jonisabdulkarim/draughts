@@ -11,8 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-import jak.draughts.gameobjects.Board;
-import jak.draughts.gameobjects.DraughtBoard;
+import jak.draughts.game.gameobjects.Board;
+import jak.draughts.game.gameobjects.DraughtBoard;
 
 public class BoardActivity extends AppCompatActivity {
 
