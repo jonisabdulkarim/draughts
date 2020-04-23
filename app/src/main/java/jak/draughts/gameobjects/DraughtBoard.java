@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jak.draughts.Coordinates;
+import jak.draughts.TileColor;
 
 public class DraughtBoard extends Board {
 
@@ -36,38 +37,49 @@ public class DraughtBoard extends Board {
     private void fillBoard(int row, int col) {
         Coordinates coords = new Coordinates(row, col);
         DraughtPiece piece;
+        TileColor color;
 
-        if (row <= RED_ROW_START && coords.isGreen()) {
-            piece = new DraughtPiece(true, false, coords);
-        } else if (row >= WHITE_ROW_END && coords.isGreen()) {
-            piece = new DraughtPiece(false, false, coords);
+        if (coords.isGreen()) {
+            color = TileColor.GREEN;
+
+            if (row <= RED_ROW_START) {
+                piece = new DraughtPiece(true, false, coords);
+            } else if (row >= WHITE_ROW_END) {
+                piece = new DraughtPiece(false, false, coords);
+            } else {
+                piece = null;
+            }
         } else {
+            color = TileColor.WHITE;
             piece = null;
         }
 
-        board.get(row).add(new DraughtTile(piece));
+        board.get(row).add(new DraughtTile(piece, color));
     }
 
     @Override
     public void createDataSet() {
-        List<Integer> convertedBoard = new ArrayList<>(COLUMNS * ROWS);
+        List<Integer> dataSet = new ArrayList<>(COLUMNS * ROWS);
+        List<TileColor> backgroundSet = new ArrayList<>(COLUMNS * ROWS);
 
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                convertedBoard.add(board.get(i).get(j).getType());
+                dataSet.add(board.get(i).get(j).getType());
+                backgroundSet.add(board.get(i).get(j).getTileColor());
             }
         }
 
-        setDataSet(convertedBoard);
+        setDataSet(dataSet);
+        setBackgroundSet(backgroundSet);
     }
 
     /**
-     * Moves the given piece to its new location. This works almost the same way as the
-     * put(...) method, difference being that it also removes the piece from its old
-     * location.
+     * Convenience method that removes the piece from its old location and puts it
+     * in the new location
      *
      * @param piece the piece to be moved
      * @param newCoordinates location of the tile to be moved to
+     * @throws IllegalStateException if tile already contains a piece
      */
     public void move(DraughtPiece piece, Coordinates newCoordinates) {
         remove(piece);

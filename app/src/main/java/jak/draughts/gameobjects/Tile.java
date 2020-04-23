@@ -2,6 +2,8 @@ package jak.draughts.gameobjects;
 
 import androidx.annotation.CallSuper;
 
+import jak.draughts.TileColor;
+
 /**
  * Each object of this class represents an individual tile in a <tt>Board</tt>.
  * <p>
@@ -9,10 +11,12 @@ import androidx.annotation.CallSuper;
  * <tt>DraughtPiece</tt> when playing Draughts), and to ensure that each different type of
  * <tt>Piece</tt> is assigned a unique number.
  * <p>
- * Each tile can only hold one <tt>Piece</tt>.
+ * Each tile can only hold one <tt>Piece</tt>. In addition, the tile must hold a value to
+ * indicate the colour of the tile's background i.e default: green/white, red when selected etc.
  */
 abstract class Tile {
     private Piece piece;
+    private TileColor tileColor;
 
     public boolean isEmpty() {
         return piece == null;
@@ -44,4 +48,12 @@ abstract class Tile {
      * @return a number specifying the type of Piece
      */
     public abstract int getType();
+
+    public TileColor getTileColor() {
+        return tileColor;
+    }
+
+    public void setTileColor(TileColor tileColor) {
+        this.tileColor = tileColor;
+    }
 }

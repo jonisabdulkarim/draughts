@@ -40,12 +40,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
+        /*
         boolean isGreen = isGreen(position);
 
         if (isGreen) {
             holder.textView.setText(String.valueOf(greenTileNumber++));
-        }
-        holder.textView.setBackground(chooseColor(isGreen));
+        }*/
+        // holder.textView.setBackground(chooseColor(isGreen));
+        holder.textView.setBackground(chooseColor(board.getBackgroundSet().get(position)));
+        // holder.textView.setBackground(board.getBackgroundSet().get(position));
 
         chooseDisc(holder, position);
     }
@@ -64,13 +67,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         }
     }
 
-    private ColorDrawable chooseColor(boolean isGreen) {
+    private ColorDrawable chooseColor(TileColor tileColor) {
         ColorDrawable color;
 
-        if (isGreen) {
-            color = new ColorDrawable(context.getColor(R.color.colorBoardGreen));
-        } else {
-            color = new ColorDrawable(context.getColor(R.color.colorBoardBuff));
+        switch(tileColor) {
+            case GREEN:
+                color = new ColorDrawable(context.getColor(R.color.colorBoardGreen));
+                break;
+            case WHITE:
+                color = new ColorDrawable(context.getColor(R.color.colorBoardBuff));
+                break;
+            default:
+                throw new IllegalStateException("Illegal tile background");
         }
 
         return color;

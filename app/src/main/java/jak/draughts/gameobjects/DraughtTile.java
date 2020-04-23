@@ -1,14 +1,22 @@
 package jak.draughts.gameobjects;
 
+import jak.draughts.TileColor;
+
 /**
  * Concrete sub-class of <tt>Tile</tt>, representing each individual tile
  * in a <tt>DraughtBoard</tt>.
  * <p>
- * Each <tt>DraughtTile</tt> object can only hold <tt>DraughtPiece</tt>.
+ * Each <tt>DraughtTile</tt> object can only hold one <tt>DraughtPiece</tt> and
+ * must be assigned a default colour when created.
  */
 public class DraughtTile extends Tile {
-    DraughtTile(DraughtPiece piece) {
+    private final TileColor defaultColor;
+
+    DraughtTile(DraughtPiece piece, TileColor defaultColor) {
+        this.defaultColor = defaultColor;
+
         setPiece(piece);
+        setTileColor(defaultColor);
     }
 
     /**
@@ -45,5 +53,12 @@ public class DraughtTile extends Tile {
         } else {
             throw new IllegalStateException("There must only be four types of pieces in Draughts.");
         }
+    }
+
+    /**
+     * Reset's the tile's background color to its default
+     */
+    public void clearSelection() {
+        setTileColor(defaultColor);
     }
 }
