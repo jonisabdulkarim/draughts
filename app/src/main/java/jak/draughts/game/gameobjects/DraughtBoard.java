@@ -76,6 +76,16 @@ public class DraughtBoard extends Board {
     }
 
     /**
+     * Sets the tile's background to the specified color
+     *
+     * @param coords tile coordinates
+     * @param tileColor new tile color
+     */
+    public void selectTile(Coordinates coords, TileColor tileColor) {
+        getTile(coords).setTileColor(tileColor);
+    }
+
+    /**
      * Convenience method that removes the piece from its old location and puts it
      * in the new location
      *
@@ -159,6 +169,28 @@ public class DraughtBoard extends Board {
     public boolean isEmpty(Coordinates coordinates) {
         DraughtTile tile = getTile(coordinates);
         return tile.isEmpty();
+    }
+
+    /**
+     * Checks if coordinates are within range of this board
+     *
+     * @param coords coordinate to be checked
+     * @return true if within range, false otherwise
+     */
+    public boolean inRange(Coordinates coords) {
+        return 0 <= coords.getX() && coords.getX() <= 7
+                && 0 <= coords.getY() && coords.getY() <= 7;
+    }
+
+    /**
+     * Returns the piece at the given location. Returns null
+     * if tile is empty
+     *
+     * @param coordinates location of tile
+     * @return piece at the given tile
+     */
+    public DraughtPiece getPiece(Coordinates coordinates) {
+        return getTile(coordinates).getPiece();
     }
 
     private DraughtTile getTile(Coordinates coordinates) {

@@ -86,10 +86,46 @@ public class CoordinatesTest {
 
     @Test
     public void testEquals() {
-        assertFalse(zero_zero.equals(zero_one));
+        assertNotEquals(zero_zero, zero_one);
         zero_one = null;
-        assertFalse(zero_zero.equals(zero_one));
+        assertNotEquals(zero_zero, zero_one);
         zero_one = new Coordinates(0);
-        assertTrue(zero_zero.equals(zero_one));
+        assertEquals(zero_zero, zero_one);
+    }
+
+    @Test
+    public void testToString() {
+        assertEquals("(0, 0)", zero_zero.toString());
+        assertEquals("(0, 1)", zero_one.toString());
+        assertEquals("(1, 0)", one_zero.toString());
+        assertEquals("(1, 1)", one_one.toString());
+    }
+
+    @Test
+    public void moveUpLeft() {
+        zero_zero = zero_zero.moveUpLeft(1);
+        assertEquals("(-1, -1)", zero_zero.toString());
+
+        // multiple spaces
+        zero_zero = zero_zero.moveUpLeft(2);
+        assertEquals("(-3, -3)", zero_zero.toString());
+    }
+
+    @Test
+    public void moveUpRight() {
+        zero_zero = zero_zero.moveUpRight(1);
+        assertEquals("(-1, 1)", zero_zero.toString());
+    }
+
+    @Test
+    public void moveDownLeft() {
+        zero_zero = zero_zero.moveDownLeft(1);
+        assertEquals("(1, -1)", zero_zero.toString());
+    }
+
+    @Test
+    public void moveDownRight() {
+        zero_zero = zero_zero.moveDownRight(1);
+        assertEquals("(1, 1)", zero_zero.toString());
     }
 }

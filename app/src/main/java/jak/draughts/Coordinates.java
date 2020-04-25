@@ -116,4 +116,48 @@ public class Coordinates {
     public String toString() {
         return "(" + getX() + ", " + getY() + ")";
     }
+
+    /**
+     * Creates a new Coordinate object based on the number of spaces
+     * from this object's coordinates in the up-left diagonal direction.
+     *
+     * @param spaces number of tiles to destination in given direction
+     * @return coordinate at that destination
+     */
+    public Coordinates moveUpLeft(int spaces) {
+        return new Coordinates(getX() - spaces, getY() - spaces);
+    }
+
+    /**
+     * Creates a new Coordinate object based on the number of spaces
+     * from this object's coordinates in the up-right diagonal direction.
+     *
+     * @param spaces number of tiles to destination in given direction
+     * @return coordinate at that destination
+     */
+    public Coordinates moveUpRight(int spaces) {
+        return new Coordinates(getX() - spaces, getY() + spaces);
+    }
+
+    /**
+     * Creates a new Coordinate object based on the number of spaces
+     * from this object's coordinates in the down-left diagonal direction.
+     *
+     * @param spaces number of tiles to destination in given direction
+     * @return coordinate at that destination
+     */
+    public Coordinates moveDownLeft(int spaces) {
+        return new Coordinates(getX() + spaces, getY() - spaces);
+    }
+
+    /**
+     * Creates a new Coordinate object based on the number of spaces
+     * from this object's coordinates in the down-right diagonal direction.
+     *
+     * @param spaces number of tiles to destination in given direction
+     * @return coordinate at that destination
+     */
+    public Coordinates moveDownRight(int spaces) {
+        return new Coordinates(getX() + spaces, getY() + spaces);
+    }
 }
