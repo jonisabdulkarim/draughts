@@ -183,6 +183,18 @@ public class DraughtBoard extends Board {
     }
 
     /**
+     * Removes any highlighted tiles by setting all tiles back
+     * to their default TileColor
+     */
+    public void deselect() {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
+                board.get(row).get(col).clearSelection();
+            }
+        }
+    }
+
+    /**
      * Returns the piece at the given location. Returns null
      * if tile is empty
      *
@@ -193,7 +205,13 @@ public class DraughtBoard extends Board {
         return getTile(coordinates).getPiece();
     }
 
-    private DraughtTile getTile(Coordinates coordinates) {
+    /**
+     * Returns the tile object at the given location.
+     *
+     * @param coordinates location of tile
+     * @return tile object
+     */
+    public DraughtTile getTile(Coordinates coordinates) {
         return board.get(coordinates.getX()).get(coordinates.getY());
     }
 

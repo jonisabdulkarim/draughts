@@ -11,6 +11,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+import jak.draughts.game.DraughtsGame;
+import jak.draughts.game.Game;
 import jak.draughts.game.gameobjects.Board;
 import jak.draughts.game.gameobjects.DraughtBoard;
 
@@ -30,7 +32,8 @@ public class BoardActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
 
     // Game variables
-    Board board;
+    // Board board;
+    Game game;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +58,12 @@ public class BoardActivity extends AppCompatActivity {
     }
 
     private void createBoard() {
-        board = new DraughtBoard();
+        game = Game.chooseGameMode('D');
     }
 
     private void createView() {
         // board data in 1d list
-        List<Integer> data = board.getDataSet();
+        List<Integer> data = game.getDataSet();
 
         // attach view to activity
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -70,7 +73,7 @@ public class BoardActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify adapter
-        adapter = new MyAdapter(getApplicationContext(), board);
+        adapter = new MyAdapter(getApplicationContext(), game);
         recyclerView.setAdapter(adapter);
     }
 

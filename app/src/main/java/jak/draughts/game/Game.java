@@ -22,7 +22,7 @@ public abstract class Game {
             case 'D':
                 Game game = new DraughtsGame();
 
-                return new DraughtsGame();
+                return game;
             default:
                 throw new IllegalArgumentException("Invalid game mode");
         }

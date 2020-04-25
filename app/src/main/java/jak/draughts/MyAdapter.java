@@ -11,22 +11,28 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import jak.draughts.game.Game;
 import jak.draughts.game.gameobjects.Board;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     private Context context;
-    private Board board;
+    private Game game;
     private List<Integer> dataSet;
     private List<TileColor> backgroundSet;
 
-    public MyAdapter(Context context, Board board) {
+    public MyAdapter(Context context, Game game) {
         this.context = context;
-        this.board = board;
-        this.dataSet = board.getDataSet();
-        this.backgroundSet = board.getBackgroundSet();
+        this.game = game;
+
+        this.dataSet = new ArrayList<>();
+        this.backgroundSet = new ArrayList<>();
+
+        this.dataSet.addAll(game.getDataSet());
+        this.backgroundSet.addAll(game.getBackgroundSet());
     }
 
     @NonNull
@@ -64,11 +70,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     }
 
     private ColorDrawable chooseColor(int position) {
-        switch (board.getBackgroundSet().get(position)) {
+        switch (game.getBackgroundSet().get(position)) {
             case GREEN:
                 return new ColorDrawable(context.getColor(R.color.colorBoardGreen));
             case WHITE:
                 return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
+            case SELECTED:
+                return new ColorDrawable(context.getColor(R.color.colorBoardSelected));
             default:
                 throw new IllegalStateException("Illegal tile background");
         }
@@ -106,16 +114,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
         Log.i("clickMessage2", "Click in position:"
                 + position + " tile no: " + textView.getText());
 
-        // board.resolveClick(position);
+        game.resolveClick(new Coordinates(position));
+        update();
     }
 
     public void update() {
-        board.createDataSet();
         this.dataSet.clear();
-        this.dataSet.addAll(board.getDataSet());
+        this.dataSet.addAll(game.getDataSet());
+
         this.backgroundSet.clear();
-        this.backgroundSet.addAll(board.getBackgroundSet());
+        this.backgroundSet.addAll(game.getBackgroundSet());
+
         notifyDataSetChanged();
-        // TODO: test above code
     }
 }

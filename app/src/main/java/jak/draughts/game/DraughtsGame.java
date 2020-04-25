@@ -6,6 +6,7 @@ import jak.draughts.Coordinates;
 import jak.draughts.TileColor;
 import jak.draughts.game.gameobjects.DraughtBoard;
 import jak.draughts.game.gameobjects.DraughtPiece;
+import jak.draughts.game.gameobjects.DraughtTile;
 
 /**
  * This class serves as the base class for all draughts game modes.
@@ -14,12 +15,12 @@ import jak.draughts.game.gameobjects.DraughtPiece;
  */
 public class DraughtsGame extends Game {
 
-    DraughtBoard board;
-    DraughtPiece selectedPiece;
+    private DraughtBoard board;
+    private DraughtPiece selectedPiece;
 
-    boolean isMyTurn; // true if it's player's turn
-    boolean isRed; // true if player controls red pieces
-    boolean mustCapture; // true if player can/must capture
+    private boolean isMyTurn; // true if it's player's turn
+    private boolean isRed; // true if player controls red pieces
+    private boolean mustCapture; // true if player can/must capture
 
     DraughtsGame() {
         this(true);
@@ -54,25 +55,55 @@ public class DraughtsGame extends Game {
         if (!isMyTurn) return; // take no action
 
         if (hasSelectedPiece()) {
-            // TODO: deselect, move, capture
+            // TODO: capture
+            if (!board.isEmpty(clickCoords)) {
+                deSelect();
+            } else {
+                makeMove(clickCoords);
+            }
         } else {
-            // TODO: select, canAnyCapture
-            canSelect(clickCoords);
+            // TODO: canAnyCapture
+            select(clickCoords);
         }
+        // TODO: endTurn
+        // endTurn();
+    }
+
+    private void makeMove(Coordinates coords) {
+        DraughtTile tile = board.getTile(coords);
+        switch (tile.getTileColor()) {
+            case CAPTURE_SELECT:
+                // TODO: capturing moves
+            case SELECTED:
+                board.move(selectedPiece, coords);
+            default:
+                deSelect(); // must be run in all cases
+        }
+    }
+
+    private void deSelect() {
+        selectedPiece = null;
+        board.deselect();
+        board.createDataSet();
     }
 
     private boolean hasSelectedPiece() {
         return selectedPiece != null;
     }
 
-    private void canSelect(Coordinates coords) {
-        if (board.isEmpty(coords)) return; // cannot select empty tile
+    private void select(Coordinates coords) {
+        if (!board.isEmpty(coords)) { // tile is not empty
+            DraughtPiece piece = board.getPiece(coords);
 
-        DraughtPiece piece = board.getPiece(coords);
-        if (isRed != piece.isRed()) return; // wrong team
-        if (canAnyCapture()) return; // no select if player's pieces can capture
-        if (canMove(piece)) {
-            selectedPiece = piece;
+            if (isRed == piece.isRed()) { // same team
+                if (!canAnyCapture()) { // TODO
+                    if (canMove(piece)) {
+                        selectedPiece = piece;
+                        board.createDataSet();
+
+                    }
+                }
+            }
         }
     }
 
@@ -91,22 +122,6 @@ public class DraughtsGame extends Game {
         boolean canMove = false;
 
         if (piece.isRed() || piece.isKing()) {
-            // up-left
-            Coordinates movedCoords = piece.getCoordinates().moveUpLeft(1);
-            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
-                board.selectTile(movedCoords, TileColor.SELECTED);
-                canMove = true;
-            }
-
-            // up-right
-            movedCoords = piece.getCoordinates().moveUpRight(1);
-            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
-                board.selectTile(movedCoords, TileColor.SELECTED);
-                canMove = true;
-            }
-        }
-
-        if (!piece.isRed() || piece.isKing()) {
             // down-left
             Coordinates movedCoords = piece.getCoordinates().moveDownLeft(1);
             if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
@@ -116,6 +131,22 @@ public class DraughtsGame extends Game {
 
             // down-right
             movedCoords = piece.getCoordinates().moveDownRight(1);
+            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
+                board.selectTile(movedCoords, TileColor.SELECTED);
+                canMove = true;
+            }
+        }
+
+        if (!piece.isRed() || piece.isKing()) {
+            // up-left
+            Coordinates movedCoords = piece.getCoordinates().moveUpLeft(1);
+            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
+                board.selectTile(movedCoords, TileColor.SELECTED);
+                canMove = true;
+            }
+
+            // up-right
+            movedCoords = piece.getCoordinates().moveUpRight(1);
             if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
                 board.selectTile(movedCoords, TileColor.SELECTED);
                 canMove = true;

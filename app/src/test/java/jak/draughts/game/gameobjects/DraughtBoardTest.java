@@ -7,7 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 
 import jak.draughts.Coordinates;
+import jak.draughts.TileColor;
 
+import static jak.draughts.TileColor.GREEN;
+import static jak.draughts.TileColor.SELECTED;
+import static jak.draughts.TileColor.WHITE;
 import static org.junit.Assert.*;
 
 public class DraughtBoardTest {
@@ -33,9 +37,20 @@ public class DraughtBoardTest {
             0, 3, 0, 3, 0, 3, 0, 3,
             3, 0, 3, 0, 3, 0, 3, 0,
     };
+    private static final TileColor[] STARTED_BOARD_BACKGROUND_ARRAY = {
+            WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN,
+            GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE,
+            WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN,
+            GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE,
+            WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN,
+            GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE,
+            WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN,
+            GREEN, WHITE, GREEN, WHITE, GREEN, WHITE, GREEN, WHITE
+    };
 
     private List<Integer> emptyBoard;
     private List<Integer> starterBoard;
+    private List<TileColor> starterBoardBackground;
     private DraughtPiece redManPiece;
     private DraughtPiece whiteManPiece;
     private DraughtBoard board;
@@ -50,6 +65,7 @@ public class DraughtBoardTest {
 
         emptyBoard = Arrays.asList(EMPTY_BOARD_ARRAY);
         starterBoard = Arrays.asList(STARTER_BOARD_ARRAY);
+        starterBoardBackground = Arrays.asList(STARTED_BOARD_BACKGROUND_ARRAY);
 
         redManPiece = new DraughtPiece(true, false, null);
         whiteManPiece = new DraughtPiece(false, false, null);
@@ -160,5 +176,33 @@ public class DraughtBoardTest {
         coords = new Coordinates(3, 2);
         assertTrue(board.isEmpty(coords));
 
+    }
+
+    @Test
+    public void selectTile() {
+        assertEquals(starterBoardBackground, board.getBackgroundSet());
+        Coordinates coords = new Coordinates(0);
+        board.selectTile(coords, SELECTED);
+        board.createDataSet();
+        assertNotEquals(starterBoardBackground, board.getBackgroundSet());
+    }
+
+    @Test
+    public void inRange() {
+        assertTrue(board.inRange(redManOccupiedCoords));
+        assertTrue(board.inRange(whiteManOccupiedCoords));
+        assertTrue(board.inRange(redManPieceCoords));
+        assertTrue(board.inRange(whiteManPieceCoords));
+
+        Coordinates outOfRangeCoords = new Coordinates(0, -1);
+        assertFalse(board.inRange(outOfRangeCoords));
+    }
+
+    @Test
+    public void getPiece() {
+        DraughtPiece piece = board.getBoard().get(redManOccupiedCoords.getX())
+                .get(redManOccupiedCoords.getY()).getPiece();
+
+        assertEquals(piece, board.getPiece(redManOccupiedCoords));
     }
 }
