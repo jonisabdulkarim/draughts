@@ -7,9 +7,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jak.draughts.game.DraughtsGame;
 import jak.draughts.game.Game;
@@ -32,7 +37,6 @@ public class BoardActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
 
     // Game variables
-    // Board board;
     Game game;
 
     @Override
@@ -48,11 +52,24 @@ public class BoardActivity extends AppCompatActivity {
         createView();
         updateView();
 
-        // initialiseFirebase(); // TODO: check
+        initialiseFirebase(); // TODO: check
     }
 
     private void initialiseFirebase() {
         database = FirebaseFirestore.getInstance();
+
+        Map<String, String> map = new HashMap<>();
+        map.put("id", "0001");
+        map.put("name", "tom");
+        map.put("MMR", "9001");
+        database.collection("test").document().set(map);
+
+        User user = new User();
+        user.setName("tom");
+        user.setRank(1L);
+        DocumentReference ref = database.collection("test").document();
+        user.setId(ref.getId());
+        ref.set(user);
 
         // TODO: create test data
     }

@@ -41,32 +41,51 @@ public class DraughtsGameTest {
 
     @Test
     public void resolveClick() {
-        // select non-playable tiles
+        // select non-playable tiles results in no change
         Coordinates coords = new Coordinates(0, 0);
         game.resolveClick(coords);
         assertEquals(64, game.getDataSet().size());
         assertEquals(64, game.getBackgroundSet().size());
 
-        // select movable piece
+        // selecting movable pieces results in dataSet changes
         game.resolveClick(redManOccupiedCoords);
         assertEquals(64, game.getDataSet().size());
         assertEquals(64, game.getBackgroundSet().size());
 
-        Coordinates movedCoords = redManOccupiedCoords.moveDownLeft(1);
+        // down-left should be selectable...
+        Coordinates downLeft = redManOccupiedCoords.moveDownLeft(1);
         assertEquals(TileColor.SELECTED,
-                game.getBackgroundSet().get(movedCoords.getPosition()));
+                game.getBackgroundSet().get(downLeft.getPosition()));
 
-        movedCoords = redManOccupiedCoords.moveDownRight(1);
+        // ...and down-right too
+        Coordinates downRight = redManOccupiedCoords.moveDownRight(1);
         assertEquals(TileColor.SELECTED,
-                game.getBackgroundSet().get(movedCoords.getPosition()));
+                game.getBackgroundSet().get(downRight.getPosition()));
 
-        movedCoords = redManOccupiedCoords.moveUpLeft(1);
+        // but not up-left...
+        Coordinates upLeft = redManOccupiedCoords.moveUpLeft(1);
         assertNotEquals(TileColor.SELECTED,
-                game.getBackgroundSet().get(movedCoords.getPosition()));
+                game.getBackgroundSet().get(upLeft.getPosition()));
 
-        movedCoords = redManOccupiedCoords.moveUpRight(1);
+        // ... nor up-right
+        Coordinates upRight = redManOccupiedCoords.moveUpRight(1);
         assertNotEquals(TileColor.SELECTED,
-                game.getBackgroundSet().get(movedCoords.getPosition()));
+                game.getBackgroundSet().get(upRight.getPosition()));
+
+        // pressing on blue tile should move piece and deselect that tile...
+        coords = redManOccupiedCoords.moveDownLeft(1);
+        game.resolveClick(coords);
+        assertEquals(2, game.getDataSet().get(coords.getPosition()).intValue());
+        assertNotEquals(TileColor.SELECTED,
+                game.getBackgroundSet().get(coords.getPosition()));
+
+        // ...and it should also deselect other tiles
+        coords = redManOccupiedCoords.moveDownRight(1);
+        assertNotEquals(TileColor.SELECTED,
+                game.getBackgroundSet().get(coords.getPosition()));
+
+        // TODO: capturing moves, canAnyCapture check
+        // TODO: wrong team check, outside board check
     }
 
     @Test
