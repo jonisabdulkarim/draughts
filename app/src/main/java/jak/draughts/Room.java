@@ -1,50 +1,41 @@
 package jak.draughts;
 
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import jak.draughts.game.Game;
+import java.util.List;
 
 public class Room {
 
-    FirebaseFirestore db;
-    User hostingUser;
-    User joiningUser;
-    Game game;
-    String gameMode;
     String roomId;
+    User userHost;
+    User userJoin;
+    String gameMode;
+    List<Integer> dataSet;
+    Coordinates movedPiece;
 
-    public Room() {}
-
-    public FirebaseFirestore getDb() {
-        return db;
+    public Room() {
     }
 
-    public void setDb(FirebaseFirestore db) {
-        this.db = db;
+    public String getRoomId() {
+        return roomId;
     }
 
-    public User getHostingUser() {
-        return hostingUser;
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
-    public void setHostingUser(User hostingUser) {
-        this.hostingUser = hostingUser;
+    public User getUserHost() {
+        return userHost;
     }
 
-    public User getJoiningUser() {
-        return joiningUser;
+    public void setUserHost(User userHost) {
+        this.userHost = userHost;
     }
 
-    public void setJoiningUser(User joiningUser) {
-        this.joiningUser = joiningUser;
+    public User getUserJoin() {
+        return userJoin;
     }
 
-    public Game getGame() {
-        return game;
-    }
-
-    public void setGame(Game game) {
-        this.game = game;
+    public void setUserJoin(User userJoin) {
+        this.userJoin = userJoin;
     }
 
     public String getGameMode() {
@@ -55,11 +46,11 @@ public class Room {
         this.gameMode = gameMode;
     }
 
-    public String getRoomId() {
-        return roomId;
+    public List<Integer> getDataSet() {
+        return dataSet;
     }
 
-    public void setRoomId(String roomId) {
-        this.roomId = roomId;
+    public void setDataSet(List<Integer> dataSet) {
+        this.dataSet = dataSet;
     }
 }

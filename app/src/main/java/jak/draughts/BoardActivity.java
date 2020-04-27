@@ -7,19 +7,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import jak.draughts.game.DraughtsGame;
 import jak.draughts.game.Game;
-import jak.draughts.game.gameobjects.Board;
-import jak.draughts.game.gameobjects.DraughtBoard;
 
 public class BoardActivity extends AppCompatActivity {
 
@@ -38,6 +31,7 @@ public class BoardActivity extends AppCompatActivity {
 
     // Game variables
     Game game;
+    Room room;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,28 +44,39 @@ public class BoardActivity extends AppCompatActivity {
 
         createBoard();
         createView();
-        updateView();
 
         initialiseFirebase(); // TODO: check
+        initialiseRoom();
+        updateRoom();
     }
 
     private void initialiseFirebase() {
         database = FirebaseFirestore.getInstance();
+    }
 
-        Map<String, String> map = new HashMap<>();
-        map.put("id", "0001");
-        map.put("name", "tom");
-        map.put("MMR", "9001");
-        database.collection("test").document().set(map);
+    private void initialiseRoom() {
+        // TODO: room test data
+        User user1 = new User();
+        user1.setName("Adam");
+        user1.setRank(1L);
+        DocumentReference ref = database.collection("users").document();
+        user1.setId(ref.getId());
+        ref.set(user1);
 
-        User user = new User();
-        user.setName("tom");
-        user.setRank(1L);
-        DocumentReference ref = database.collection("test").document();
-        user.setId(ref.getId());
-        ref.set(user);
+        User user2 = new User();
+        user2.setName("Bob");
+        user2.setRank(2L);
+        ref = database.collection("users").document();
+        user2.setId(ref.getId());
+        ref.set(user2);
 
-        // TODO: create test data
+        room = new Room();
+        room.setGameMode("D");
+        room.setUserHost(user1);
+        room.setUserJoin(user2);
+        ref = database.collection("rooms").document();
+        room.setRoomId(ref.getId());
+        ref.set(room);
     }
 
     private void createBoard() {
@@ -94,10 +99,9 @@ public class BoardActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void updateView() {
-        // List<Integer> data = board.convertBoard();
-        // adapter.setDataSet(board);
-        // TODO
+    private void updateRoom() {
+        room.setDataSet(game.getDataSet());
+        database.collection("rooms").document(room.getRoomId()).set(room);
     }
 
     private void gameLoop() {
