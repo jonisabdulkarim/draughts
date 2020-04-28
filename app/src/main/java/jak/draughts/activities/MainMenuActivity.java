@@ -23,4 +23,10 @@ public class MainMenuActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_CHAR, 'D');
         startActivity(intent);
     }
+
+    public void enterLobbyActivity(View view) {
+        Intent intent = new Intent(this, LobbyActivity.class);
+        // intent.putExtra(EXTRA_CHAR, 'D');
+        startActivity(intent);
+    }
 }

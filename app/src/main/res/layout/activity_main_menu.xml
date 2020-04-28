@@ -34,6 +34,7 @@
         android:id="@+id/mainLobbyButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="enterLobbyActivity"
         android:text="@string/lobbyButtonText"
         app:layout_constraintBottom_toTopOf="@+id/debugButton"
         app:layout_constraintEnd_toEndOf="parent"
