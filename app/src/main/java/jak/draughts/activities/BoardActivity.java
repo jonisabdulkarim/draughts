@@ -1,4 +1,4 @@
-package jak.draughts;
+package jak.draughts.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
+import jak.draughts.R;
+import jak.draughts.Room;
+import jak.draughts.User;
 import jak.draughts.game.Game;
 
 public class BoardActivity extends AppCompatActivity {

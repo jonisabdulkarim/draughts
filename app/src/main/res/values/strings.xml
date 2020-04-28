@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Draughts</string>
-    <string name="debugButtonName">Debug</string>
+    <string name="debugButtonText">Debug</string>
     <string name="str_red_king_disc">A red king disc</string>
+    <string name="lobbyButtonText">Lobby</string>
 </resources>
