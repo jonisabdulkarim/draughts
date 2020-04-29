@@ -8,11 +8,20 @@ import com.google.android.material.snackbar.Snackbar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jak.draughts.LobbyDatabase;
 import jak.draughts.R;
+import jak.draughts.Room;
 
 public class LobbyActivity extends AppCompatActivity {
+
+    LobbyDatabase database;
+    List<Room> rooms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +34,41 @@ public class LobbyActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                refresh();
             }
         });
+
+        initialiseDatabase();
+    }
+
+    /**
+     * Initialises the LobbyDatabase, which contains the relevant queries.
+     * Once initialised, it will call fetchUpdates(...) automatically.
+     */
+    private void initialiseDatabase() {
+        rooms = new ArrayList<>();
+        database = new LobbyDatabase(this);
+        database.fetchUpdates(rooms);
+    }
+
+    /**
+     * Retrieves the latest data from the database. The view
+     * will update once the query is complete. Called by the
+     * "refresh" button
+     */
+    public void refresh() {
+        database.fetchUpdates(rooms);
+    }
+
+    /**
+     * Updates the lobby view. Called by the database when fetching
+     * new data.
+     */
+    public void update() {
+        for (Room room : rooms) {
+            Log.d("LOBBY", room.getUserHost().getName());
+        }
+
+        Log.d("LOBBY", "END");
     }
 }
