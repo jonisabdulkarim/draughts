@@ -19,8 +19,8 @@ import jak.draughts.activities.LobbyActivity;
 
 public class LobbyDatabase  {
 
-    FirebaseFirestore database;
-    LobbyActivity lobbyActivity;
+    private FirebaseFirestore database;
+    private LobbyActivity lobbyActivity;
 
     public LobbyDatabase(LobbyActivity lobbyActivity) {
         this.lobbyActivity = lobbyActivity;
@@ -41,6 +41,8 @@ public class LobbyDatabase  {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            rooms.clear();
+
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Room room = document.toObject(Room.class);
                                 rooms.add(room);
@@ -67,7 +69,7 @@ public class LobbyDatabase  {
      * Sets up a listener to automatically fetch updates when
      * changes have been made in the database.
      *
-     * @return
+     * @return TODO
      */
     public boolean listenForChanges() {
         // TODO
