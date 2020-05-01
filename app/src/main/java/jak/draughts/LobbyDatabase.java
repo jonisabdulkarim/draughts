@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -54,6 +55,58 @@ public class LobbyDatabase  {
                         lobbyActivity.update();
                     }
                 });
+    }
+
+    public void initialiseRooms() {
+        String[] arr = {
+                "Adam", "Bob", "Charlie", "Darlene", "Emma", "Felix",
+                "Guy", "Hector", "India", "Julia", "Kevin", "Liam"
+        };
+
+        long rank = 1L;
+        for (int i = 0; i < 10; i+=2) {
+
+
+            // TODO: room test data
+            User user1 = new User();
+            user1.setName(arr[i]);
+            user1.setRank(rank++);
+            DocumentReference ref = database.collection("users").document();
+            user1.setId(ref.getId());
+            ref.set(user1);
+
+            User user2 = new User();
+            user2.setName(arr[i+1]);
+            user2.setRank(rank++);
+            ref = database.collection("users").document();
+            user2.setId(ref.getId());
+            ref.set(user2);
+
+            Room room = new Room();
+            room.setGameMode("D");
+            room.setUserHost(user1);
+            room.setUserJoin(user2);
+            ref = database.collection("rooms").document();
+            room.setRoomId(ref.getId());
+            ref.set(room);
+        }
+
+        for (int i = 11; i < 12; i++) {
+            // TODO: room test data
+            User user1 = new User();
+            user1.setName(arr[i]);
+            user1.setRank(rank++);
+            DocumentReference ref = database.collection("users").document();
+            user1.setId(ref.getId());
+            ref.set(user1);
+
+            Room room = new Room();
+            room.setGameMode("D");
+            room.setUserHost(user1);
+            ref = database.collection("rooms").document();
+            room.setRoomId(ref.getId());
+            ref.set(room);
+        }
     }
 
     /**

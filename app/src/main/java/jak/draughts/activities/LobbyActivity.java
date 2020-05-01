@@ -5,20 +5,29 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import jak.draughts.LobbyAdapter;
 import jak.draughts.LobbyDatabase;
 import jak.draughts.R;
 import jak.draughts.Room;
+import jak.draughts.User;
 
 public class LobbyActivity extends AppCompatActivity {
 
     LobbyDatabase database;
     List<Room> rooms;
+
+    LobbyAdapter lobbyAdapter;
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +43,7 @@ public class LobbyActivity extends AppCompatActivity {
         });
 
         initialiseDatabase();
+        createView();
     }
 
     /**
@@ -43,7 +53,18 @@ public class LobbyActivity extends AppCompatActivity {
     private void initialiseDatabase() {
         rooms = new ArrayList<>();
         database = new LobbyDatabase(this);
+        database.initialiseRooms();
         database.fetchUpdates(rooms);
+    }
+
+    private void createView() {
+        recyclerView = findViewById(R.id.recyclerViewLobby);
+
+        layoutManager = new LinearLayoutManager(getApplicationContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        lobbyAdapter = new LobbyAdapter(this, rooms);
+        recyclerView.setAdapter(lobbyAdapter);
     }
 
     /**
@@ -64,6 +85,9 @@ public class LobbyActivity extends AppCompatActivity {
             Log.d("LOBBY", room.getUserHost().getName());
         }
 
+        lobbyAdapter.update();
         Log.d("LOBBY", "END");
     }
+
+
 }
