@@ -1,4 +1,4 @@
-package jak.draughts.activities;
+package jak.draughts.lobby;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -9,16 +9,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import jak.draughts.LobbyAdapter;
-import jak.draughts.LobbyDatabase;
 import jak.draughts.R;
 import jak.draughts.Room;
-import jak.draughts.User;
 
 public class LobbyActivity extends AppCompatActivity {
 

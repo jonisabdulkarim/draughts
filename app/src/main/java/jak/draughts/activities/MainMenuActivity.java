@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import jak.draughts.R;
+import jak.draughts.lobby.LobbyActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
     public static final String EXTRA_CHAR = "gameMode";

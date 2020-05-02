@@ -1,4 +1,4 @@
-package jak.draughts;
+package jak.draughts.lobby;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-import jak.draughts.activities.LobbyActivity;
+import jak.draughts.R;
+import jak.draughts.Room;
 
 public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHolder> {
 
