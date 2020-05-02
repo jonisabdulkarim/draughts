@@ -17,7 +17,7 @@ import jak.draughts.Room;
 import jak.draughts.User;
 import jak.draughts.activities.MainMenuActivity;
 
-public class BoardActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
 
     // Debug variables
     char mode;
@@ -29,7 +29,7 @@ public class BoardActivity extends AppCompatActivity {
     // RecycleView variables
     RecyclerView recyclerView;
     //RecyclerView.Adapter adapter;
-    MyAdapter adapter;
+    GameAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
 
     // Game variables
@@ -98,7 +98,7 @@ public class BoardActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify adapter
-        adapter = new MyAdapter(getApplicationContext(), game);
+        adapter = new GameAdapter(getApplicationContext(), game);
         recyclerView.setAdapter(adapter);
     }
 

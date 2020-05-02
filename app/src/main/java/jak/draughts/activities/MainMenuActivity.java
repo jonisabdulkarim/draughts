@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import jak.draughts.R;
-import jak.draughts.game.BoardActivity;
+import jak.draughts.game.GameActivity;
 import jak.draughts.lobby.LobbyActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -21,7 +21,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     public void debugBoardActivity(View view) {
-        Intent intent = new Intent(this, BoardActivity.class);
+        Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(EXTRA_CHAR, 'D');
         startActivity(intent);
     }

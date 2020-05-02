@@ -18,14 +18,14 @@ import jak.draughts.Coordinates;
 import jak.draughts.R;
 import jak.draughts.TileColor;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
+public class GameAdapter extends RecyclerView.Adapter<GameAdapter.MyViewHolder> {
 
     private Context context;
     private Game game;
     private List<Integer> dataSet;
     private List<TileColor> backgroundSet;
 
-    public MyAdapter(Context context, Game game) {
+    public GameAdapter(Context context, Game game) {
         this.context = context;
         this.game = game;
 
@@ -38,7 +38,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
     @NonNull
     @Override
-    public MyAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GameAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.view_board_tile, parent, false);
 
