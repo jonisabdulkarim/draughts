@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -49,15 +50,22 @@ public class LobbyActivity extends AppCompatActivity {
     private void initialiseDatabase() {
         rooms = new ArrayList<>();
         database = new LobbyDatabase(this);
-        database.initialiseRooms();
+        // database.initialiseRooms(); todo: remove test data when done
         database.fetchUpdates(rooms);
     }
 
+    /**
+     * Links recyclerView object to XML file, sets layout manager and
+     * vertical dividers, then links the recyclerview to its adapter.
+     */
     private void createView() {
         recyclerView = findViewById(R.id.recyclerViewLobby);
 
         layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.addItemDecoration(new DividerItemDecoration(
+                recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
         lobbyAdapter = new LobbyAdapter(this, rooms);
         recyclerView.setAdapter(lobbyAdapter);
@@ -77,6 +85,7 @@ public class LobbyActivity extends AppCompatActivity {
      * new data.
      */
     public void update() {
+        // TODO: remove test data
         for (Room room : rooms) {
             Log.d("LOBBY", room.getUserHost().getName());
         }
