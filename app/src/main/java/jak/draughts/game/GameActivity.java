@@ -50,7 +50,7 @@ public class GameActivity extends AppCompatActivity {
 
         initialiseFirebase(); // TODO: check
         // initialiseRoom();
-        updateRoom();
+        // updateRoom();
     }
 
     private void initialiseFirebase() {
@@ -61,14 +61,14 @@ public class GameActivity extends AppCompatActivity {
         // TODO: room test data
         User user1 = new User();
         user1.setName("Adam");
-        user1.setRank(1L);
+        // user1.setRank(1L);
         DocumentReference ref = database.collection("users").document();
         user1.setId(ref.getId());
         ref.set(user1);
 
         User user2 = new User();
         user2.setName("Bob");
-        user2.setRank(2L);
+        // user2.setRank(2L);
         ref = database.collection("users").document();
         user2.setId(ref.getId());
         ref.set(user2);

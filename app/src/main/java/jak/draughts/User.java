@@ -10,14 +10,16 @@ public class User {
 
     private String id; // aka document id, containing the user
     private String name; // username
-    private Long rank; // ranking, to be implemented
 
     public User() {}
 
-    public User(String id, String name, Long rank) {
+    public User(String id) {
+        this(id, "Guest");
+    }
+
+    public User(String id, String name) {
         this.id = id;
         this.name = name;
-        this.rank = rank;
     }
 
     public String getId() {
@@ -34,13 +36,5 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Long getRank() {
-        return rank;
-    }
-
-    public void setRank(Long rank) {
-        this.rank = rank;
     }
 }

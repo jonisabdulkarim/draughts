@@ -15,7 +15,6 @@ import java.util.List;
 
 import jak.draughts.Room;
 import jak.draughts.User;
-import jak.draughts.lobby.LobbyActivity;
 
 public class LobbyDatabase  {
 
@@ -69,14 +68,12 @@ public class LobbyDatabase  {
             // TODO: room test data
             User user1 = new User();
             user1.setName(arr[i]);
-            user1.setRank(rank++);
             DocumentReference ref = database.collection("users").document();
             user1.setId(ref.getId());
             ref.set(user1);
 
             User user2 = new User();
             user2.setName(arr[i+1]);
-            user2.setRank(rank++);
             ref = database.collection("users").document();
             user2.setId(ref.getId());
             ref.set(user2);
@@ -94,7 +91,6 @@ public class LobbyDatabase  {
             // TODO: room test data
             User user1 = new User();
             user1.setName(arr[i]);
-            user1.setRank(rank++);
             DocumentReference ref = database.collection("users").document();
             user1.setId(ref.getId());
             ref.set(user1);

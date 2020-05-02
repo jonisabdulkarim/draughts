@@ -16,11 +16,13 @@ import java.util.List;
 
 import jak.draughts.R;
 import jak.draughts.Room;
+import jak.draughts.User;
 
 public class LobbyActivity extends AppCompatActivity {
 
     LobbyDatabase database;
     List<Room> rooms;
+    Room selectedRoom;
 
     LobbyAdapter lobbyAdapter;
     RecyclerView recyclerView;
@@ -94,5 +96,25 @@ public class LobbyActivity extends AppCompatActivity {
         Log.d("LOBBY", "END");
     }
 
+    /**
+     * Starts the RoomActivity with the Intent to join
+     * the selected room. Called by the "Join" button in
+     * the Lobby screen. The user will be temporarily named
+     * "Guest" with the option of changing it.
+     */
+    public void joinRoom() {
+        if (selectedRoom == null) return;
 
+        // TODO: create lobby method
+    }
+
+    /**
+     * Starts the RoomActivity with the Intent to create
+     * a new room. Called by the "Create" button in
+     * the Lobby screen. The user will be temporarily named
+     * "Guest" with the option of changing it.
+     */
+    public void createRoom() {
+        // TODO: create lobby method
+    }
 }
