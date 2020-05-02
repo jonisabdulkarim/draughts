@@ -10,10 +10,10 @@
         android:id="@+id/recyclerViewLobby"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarTop"
+        app:layout_constraintBottom_toTopOf="@+id/toolbarBottom"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
@@ -28,7 +28,18 @@
         app:srcCompat="@drawable/refresh_icon" />
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+        android:id="@+id/toolbarTop"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarBottom"
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:background="?attr/colorPrimary"
@@ -38,15 +49,34 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar2"
-        android:layout_width="0dp"
-        android:layout_height="56dp"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <Button
+        android:id="@+id/buttonLobbyBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbarBottom"
+        app:layout_constraintStart_toStartOf="@+id/toolbarBottom"
+        app:layout_constraintTop_toTopOf="@+id/toolbarBottom" />
+
+    <Button
+        android:id="@+id/buttonLobbyCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbarBottom"
+        app:layout_constraintEnd_toStartOf="@id/buttonLobbyJoin"
+        app:layout_constraintStart_toEndOf="@id/buttonLobbyBack"
+        app:layout_constraintTop_toTopOf="@+id/toolbarBottom" />
+
+    <Button
+        android:id="@+id/buttonLobbyJoin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:text="@string/join"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbarBottom"
+        app:layout_constraintEnd_toEndOf="@+id/toolbarBottom"
+        app:layout_constraintTop_toTopOf="@+id/toolbarBottom" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
