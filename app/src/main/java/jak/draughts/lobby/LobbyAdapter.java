@@ -2,6 +2,7 @@ package jak.draughts.lobby;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,11 +21,13 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
     private LobbyActivity activity;
     private List<Room> rooms;
     private Context context;
+    private Room selectedRoom;
 
     public LobbyAdapter(LobbyActivity activity, List<Room> rooms) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
         this.rooms = rooms;
+        this.selectedRoom = activity.selectedRoom;
     }
 
     @NonNull
@@ -63,9 +66,9 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
 
     private ColorDrawable chooseColor(int position) {
         if (rooms.get(position).getUserJoin() == null) {
-            return new ColorDrawable(context.getColor(R.color.colorPrimary));
+            return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
         } else {
-            return new ColorDrawable(context.getColor(R.color.colorPrimaryDark));
+            return new ColorDrawable(context.getColor(R.color.colorBoardGreen));
         }
     }
 
@@ -82,7 +85,7 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
 
         TextView textView;
 
-        public LobbyViewHolder(@NonNull View itemView) {
+        LobbyViewHolder(@NonNull View itemView) {
             super(itemView);
             this.textView = itemView.findViewById(R.id.item_lobby_room);
             this.textView.setOnClickListener(this);
@@ -90,7 +93,24 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
 
         @Override
         public void onClick(View view) {
+            onItemClick(textView, getAdapterPosition());
+        }
+    }
+
+    private void onItemClick(View view, int position) {
+        // TODO: update Room class
+        if (isSelected(view)) {
+            selectedRoom = null;
+            view.setBackgroundColor(context.getColor(R.color.colorBoardBuff));
+        } else if (selectedRoom != null) {
+
+        } else {
 
         }
+    }
+
+    private boolean isSelected(View view) {
+        Drawable color = view.getBackground();
+        return color == context.getDrawable(R.color.colorBoardSelected);
     }
 }

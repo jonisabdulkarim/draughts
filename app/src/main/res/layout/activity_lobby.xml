@@ -64,6 +64,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/create"
+        android:onClick="createRoom"
         app:layout_constraintBottom_toBottomOf="@+id/toolbarBottom"
         app:layout_constraintEnd_toStartOf="@id/buttonLobbyJoin"
         app:layout_constraintStart_toEndOf="@id/buttonLobbyBack"
@@ -75,6 +76,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:text="@string/join"
+        android:onClick="joinRoom"
         app:layout_constraintBottom_toBottomOf="@+id/toolbarBottom"
         app:layout_constraintEnd_toEndOf="@+id/toolbarBottom"
         app:layout_constraintTop_toTopOf="@+id/toolbarBottom" />

@@ -97,12 +97,20 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     /**
+     * Selects a room by highlighting it or, if already selected,
+     * deselects the room.
+     */
+    public void selectRoom() {
+
+    }
+
+    /**
      * Starts the RoomActivity with the Intent to join
      * the selected room. Called by the "Join" button in
      * the Lobby screen. The user will be temporarily named
      * "Guest" with the option of changing it.
      */
-    public void joinRoom() {
+    public void joinRoom(View view) {
         if (selectedRoom == null) return;
 
         // TODO: create lobby method
@@ -114,7 +122,7 @@ public class LobbyActivity extends AppCompatActivity {
      * the Lobby screen. The user will be temporarily named
      * "Guest" with the option of changing it.
      */
-    public void createRoom() {
+    public void createRoom(View view) {
         // TODO: create lobby method
     }
 }
