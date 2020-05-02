@@ -1,4 +1,4 @@
-package jak.draughts.activities;
+package jak.draughts.game;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,7 +15,7 @@ import java.util.List;
 import jak.draughts.R;
 import jak.draughts.Room;
 import jak.draughts.User;
-import jak.draughts.game.Game;
+import jak.draughts.activities.MainMenuActivity;
 
 public class BoardActivity extends AppCompatActivity {
 

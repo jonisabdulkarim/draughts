@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import jak.draughts.R;
+import jak.draughts.game.BoardActivity;
 import jak.draughts.lobby.LobbyActivity;
 
 public class MainMenuActivity extends AppCompatActivity {

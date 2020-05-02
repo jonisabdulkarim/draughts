@@ -1,4 +1,4 @@
-package jak.draughts.activities;
+package jak.draughts.game;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
@@ -17,7 +17,6 @@ import java.util.List;
 import jak.draughts.Coordinates;
 import jak.draughts.R;
 import jak.draughts.TileColor;
-import jak.draughts.game.Game;
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
 
