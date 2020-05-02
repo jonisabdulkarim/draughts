@@ -8,11 +8,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".room.RoomActivity"></activity>
         <activity
             android:name=".lobby.LobbyActivity"
             android:label="@string/title_activity_lobby"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activities.MainMenuActivity">
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".main.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

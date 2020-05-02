@@ -1,4 +1,4 @@
-package jak.draughts.activities;
+package jak.draughts.main;
 
 import androidx.appcompat.app.AppCompatActivity;
 

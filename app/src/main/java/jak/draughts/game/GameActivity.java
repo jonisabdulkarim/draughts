@@ -15,7 +15,7 @@ import java.util.List;
 import jak.draughts.R;
 import jak.draughts.Room;
 import jak.draughts.User;
-import jak.draughts.activities.MainMenuActivity;
+import jak.draughts.main.MainMenuActivity;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -42,14 +42,14 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_board);
 
         Intent intent = getIntent();
-        mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X');
+        mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X'); // todo: change
         TAG = this.getClass().getName();
 
         createBoard();
         createView();
 
         initialiseFirebase(); // TODO: check
-        initialiseRoom();
+        // initialiseRoom();
         updateRoom();
     }
 
