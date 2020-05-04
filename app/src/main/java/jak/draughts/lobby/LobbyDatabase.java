@@ -105,12 +105,40 @@ public class LobbyDatabase  {
     }
 
     /**
-     * Updates the database by adding the newly created room.
+     * Creates a new room which is sent to the database.
+     * The room id is returned once the request is sent.
+     * The created room will contain a Guest user with
+     * a unique id.
      *
-     * @param room the created room
+     * @return String of created room id
      */
-    public void create(Room room) {
-        // TODO
+    public String createRoom() {
+        DocumentReference ref = database.collection("rooms").document();
+
+        Room room = new Room();
+        room.setRoomId(ref.getId());
+        room.setUserHost(createUser());
+
+        ref.set(room);
+        return room.getRoomId();
+    }
+
+    /**
+     * Helper method which creates a "guest" user and
+     * uploads it to the database before returning the
+     * created user object.
+     *
+     * @return the created user object
+     */
+    private User createUser() {
+        DocumentReference ref = database.collection("users").document();
+
+        User user = new User();
+        user.setId(ref.getId());
+        user.setName("Guest");
+
+        ref.set(user);
+        return user;
     }
 
     /**

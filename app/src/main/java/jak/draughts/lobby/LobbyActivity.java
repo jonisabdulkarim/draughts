@@ -17,7 +17,7 @@ import java.util.List;
 
 import jak.draughts.R;
 import jak.draughts.Room;
-import jak.draughts.User;
+import jak.draughts.room.RoomActivity;
 
 public class LobbyActivity extends AppCompatActivity {
 
@@ -117,11 +117,7 @@ public class LobbyActivity extends AppCompatActivity {
      * "Guest" with the option of changing it.
      */
     public void joinRoom(View view) {
-        if (selectedRoom != null) {
-
-        }
-
-        // TODO: create lobby method
+        // TODO: join room
     }
 
     /**
@@ -131,6 +127,11 @@ public class LobbyActivity extends AppCompatActivity {
      * "Guest" with the option of changing it.
      */
     public void createRoom(View view) {
-        // TODO: create lobby method
+        String roomId = database.createRoom();
+
+        Intent intent = new Intent(this, RoomActivity.class);
+        intent.putExtra("ROOM_ID", roomId);
+
+        startActivity(intent);
     }
 }
