@@ -1,5 +1,6 @@
 package jak.draughts.lobby;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -97,11 +98,16 @@ public class LobbyActivity extends AppCompatActivity {
     }
 
     /**
-     * Selects a room by highlighting it or, if already selected,
-     * deselects the room.
+     * Sets the given room as the currently selected room.
+     *
+     * @param room to select, or null to deselect
      */
-    public void selectRoom() {
+    public void setSelectedRoom(Room room) {
+        this.selectedRoom = room;
+    }
 
+    public Room getSelectedRoom() {
+        return selectedRoom;
     }
 
     /**
@@ -111,7 +117,9 @@ public class LobbyActivity extends AppCompatActivity {
      * "Guest" with the option of changing it.
      */
     public void joinRoom(View view) {
-        if (selectedRoom == null) return;
+        if (selectedRoom != null) {
+
+        }
 
         // TODO: create lobby method
     }

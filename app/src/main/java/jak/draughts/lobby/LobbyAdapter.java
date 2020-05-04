@@ -21,13 +21,11 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
     private LobbyActivity activity;
     private List<Room> rooms;
     private Context context;
-    private Room selectedRoom;
 
     public LobbyAdapter(LobbyActivity activity, List<Room> rooms) {
         this.activity = activity;
         this.context = activity.getApplicationContext();
         this.rooms = rooms;
-        this.selectedRoom = activity.selectedRoom;
     }
 
     @NonNull
@@ -65,7 +63,11 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
     }
 
     private ColorDrawable chooseColor(int position) {
-        if (rooms.get(position).getUserJoin() == null) {
+        Room room = rooms.get(position);
+
+        if (room == activity.getSelectedRoom()) {
+            return new ColorDrawable(context.getColor(R.color.colorBoardSelected));
+        } else if (room.getUserJoin() == null) {
             return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
         } else {
             return new ColorDrawable(context.getColor(R.color.colorBoardGreen));
@@ -77,6 +79,11 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
         return rooms.size();
     }
 
+    /**
+     * Informs the adapter that either the dataSet
+     * has changed or that a room has been selected.
+     * The recyclerView will update accordingly.
+     */
     public void update() {
         notifyDataSetChanged();
     }
@@ -97,20 +104,27 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
         }
     }
 
+    /**
+     * Called by the ViewHolder object that was clicked.
+     * Selects the corresponding room and updates the
+     * view accordingly. If the given room is already
+     * selected, it will be deselected.
+     *
+     * @param view that was clicked
+     * @param position index of the corresponding room
+     */
     private void onItemClick(View view, int position) {
         // TODO: update Room class
-        if (isSelected(view)) {
-            selectedRoom = null;
-            view.setBackgroundColor(context.getColor(R.color.colorBoardBuff));
-        } else if (selectedRoom != null) {
+        Room room = rooms.get(position);
 
+        if (room == activity.getSelectedRoom()) {
+            // deselect if already selected
+            activity.setSelectedRoom(null);
         } else {
-
+            // select room if others/none are selected
+            activity.setSelectedRoom(room);
         }
-    }
 
-    private boolean isSelected(View view) {
-        Drawable color = view.getBackground();
-        return color == context.getDrawable(R.color.colorBoardSelected);
+        update();
     }
 }
