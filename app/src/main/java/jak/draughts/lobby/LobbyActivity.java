@@ -90,7 +90,7 @@ public class LobbyActivity extends AppCompatActivity {
     public void update() {
         // TODO: remove test data
         for (Room room : rooms) {
-            Log.d("LOBBY", room.getUserHost().getName());
+            Log.d("LOBBY", "Id: " + room.getUserHostId());
         }
 
         lobbyAdapter.update();

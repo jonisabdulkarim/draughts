@@ -21,9 +21,14 @@ public class LobbyDatabase  {
     private FirebaseFirestore database;
     private LobbyActivity lobbyActivity;
 
+    private static final int ROOM_VACANT = 0;
+    private static final int ROOM_FULL = 1;
+    private static final int ROOM_PLAYING = 2;
+
     public LobbyDatabase(LobbyActivity lobbyActivity) {
         this.lobbyActivity = lobbyActivity;
-        database = FirebaseFirestore.getInstance();
+        this.database = FirebaseFirestore.getInstance();
+        // initialiseRooms(); // TODO: testing only
     }
 
     /**
@@ -63,8 +68,6 @@ public class LobbyDatabase  {
 
         long rank = 1L;
         for (int i = 0; i < 10; i+=2) {
-
-
             // TODO: room test data
             User user1 = new User();
             user1.setName(arr[i]);
@@ -80,28 +83,29 @@ public class LobbyDatabase  {
 
             Room room = new Room();
             room.setGameMode("D");
-            room.setUserHost(user1);
-            room.setUserJoin(user2);
+            room.setUserHostId(user1.getId());
+            room.setUserJoinId(user2.getId());
+            room.setStatus(1);
             ref = database.collection("rooms").document();
             room.setRoomId(ref.getId());
             ref.set(room);
         }
 
-        for (int i = 11; i < 12; i++) {
-            // TODO: room test data
-            User user1 = new User();
-            user1.setName(arr[i]);
-            DocumentReference ref = database.collection("users").document();
-            user1.setId(ref.getId());
-            ref.set(user1);
+        int i = 11;
+        // TODO: room test data
+        User user1 = new User();
+        user1.setName(arr[i]);
+        DocumentReference ref = database.collection("users").document();
+        user1.setId(ref.getId());
+        ref.set(user1);
 
-            Room room = new Room();
-            room.setGameMode("D");
-            room.setUserHost(user1);
-            ref = database.collection("rooms").document();
-            room.setRoomId(ref.getId());
-            ref.set(room);
-        }
+        Room room = new Room();
+        room.setGameMode("D");
+        room.setUserHostId(user1.getId());
+        room.setStatus(0);
+        ref = database.collection("rooms").document();
+        room.setRoomId(ref.getId());
+        ref.set(room);
     }
 
     /**
@@ -117,7 +121,8 @@ public class LobbyDatabase  {
 
         Room room = new Room();
         room.setRoomId(ref.getId());
-        room.setUserHost(createUser());
+        room.setUserHostId(createUser().getId());
+        room.setStatus(0);
 
         ref.set(room);
         return room.getRoomId();

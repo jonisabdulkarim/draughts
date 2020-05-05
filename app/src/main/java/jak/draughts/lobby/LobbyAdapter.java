@@ -2,7 +2,6 @@ package jak.draughts.lobby;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +20,10 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
     private LobbyActivity activity;
     private List<Room> rooms;
     private Context context;
+
+    private static final int ROOM_VACANT = 0;
+    private static final int ROOM_FULL = 1;
+    private static final int ROOM_PLAYING = 2;
 
     public LobbyAdapter(LobbyActivity activity, List<Room> rooms) {
         this.activity = activity;
@@ -47,15 +50,25 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
     private String chooseText(int position) {
         StringBuilder sb = new StringBuilder();
         Room room = rooms.get(position);
-        sb.append("Host: ").append(room.getUserHost().getName());
+        sb.append("Host: ").append(room.getUserHostId());
         sb.append("\n");
-        sb.append("Status: ");
-        if (room.getUserJoin() != null) {
-            sb.append("full");
-        } else {
-            sb.append("vacant");
-        }
+        sb.append("Game Mode: ").append(room.getGameMode());
+        sb.append("\n");
+        sb.append("Status: ").append(parseStatus(room.getStatus()));
         return sb.toString();
+    }
+
+    private String parseStatus(int status) {
+        switch(status) {
+            case ROOM_VACANT:
+                return "VACANT";
+            case ROOM_FULL:
+                return "FULL";
+            case ROOM_PLAYING:
+                return "PLAYING";
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 
     private void chooseColor(@NonNull LobbyViewHolder holder, int position) {
@@ -67,10 +80,14 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
 
         if (room == activity.getSelectedRoom()) {
             return new ColorDrawable(context.getColor(R.color.colorBoardSelected));
-        } else if (room.getUserJoin() == null) {
+        } else if (room.getStatus() == ROOM_VACANT) {
             return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
-        } else {
+        } else if (room.getStatus() == ROOM_FULL) {
             return new ColorDrawable(context.getColor(R.color.colorBoardGreen));
+        } else if (room.getStatus() == ROOM_PLAYING){
+            return new ColorDrawable(context.getColor(R.color.colorBoardCaptureSelect));
+        } else {
+            throw new IllegalStateException();
         }
     }
 

@@ -5,8 +5,9 @@ import java.util.List;
 public class Room {
 
     String roomId;
-    User userHost;
-    User userJoin;
+    String userHostId;
+    String userJoinId;
+    int status;
     String gameMode;
     List<Integer> dataSet;
     Coordinates movedPiece;
@@ -22,20 +23,28 @@ public class Room {
         this.roomId = roomId;
     }
 
-    public User getUserHost() {
-        return userHost;
+    public String getUserHostId() {
+        return userHostId;
     }
 
-    public void setUserHost(User userHost) {
-        this.userHost = userHost;
+    public void setUserHostId(String userHostId) {
+        this.userHostId = userHostId;
     }
 
-    public User getUserJoin() {
-        return userJoin;
+    public String getUserJoinId() {
+        return userJoinId;
     }
 
-    public void setUserJoin(User userJoin) {
-        this.userJoin = userJoin;
+    public void setUserJoinId(String userJoinId) {
+        this.userJoinId = userJoinId;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getGameMode() {

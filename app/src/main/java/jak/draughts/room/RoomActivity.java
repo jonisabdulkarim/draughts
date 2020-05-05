@@ -59,8 +59,8 @@ public class RoomActivity extends AppCompatActivity {
      */
     private void readRoom() {
         Log.d(TAG, "Room id: " + room.getRoomId());
-        Log.d(TAG, "User name: " + room.getUserHost().getName());
-        Log.d(TAG, "User host id: " + room.getUserHost().getId());
+        Log.d(TAG, "User name: " + room.getUserHostId());
+        Log.d(TAG, "User host id: " + room.getUserHostId());
         Log.d(TAG, "Game mode: " + room.getGameMode());
     }
 }

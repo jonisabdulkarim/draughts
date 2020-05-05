@@ -49,37 +49,11 @@ public class GameActivity extends AppCompatActivity {
         createView();
 
         initialiseFirebase(); // TODO: check
-        // initialiseRoom();
         // updateRoom();
     }
 
     private void initialiseFirebase() {
         database = FirebaseFirestore.getInstance();
-    }
-
-    private void initialiseRoom() {
-        // TODO: room test data
-        User user1 = new User();
-        user1.setName("Adam");
-        // user1.setRank(1L);
-        DocumentReference ref = database.collection("users").document();
-        user1.setId(ref.getId());
-        ref.set(user1);
-
-        User user2 = new User();
-        user2.setName("Bob");
-        // user2.setRank(2L);
-        ref = database.collection("users").document();
-        user2.setId(ref.getId());
-        ref.set(user2);
-
-        room = new Room();
-        room.setGameMode("D");
-        room.setUserHost(user1);
-        room.setUserJoin(user2);
-        ref = database.collection("rooms").document();
-        room.setRoomId(ref.getId());
-        ref.set(room);
     }
 
     private void createBoard() {
