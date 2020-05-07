@@ -131,7 +131,6 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
      * @param position index of the corresponding room
      */
     private void onItemClick(View view, int position) {
-        // TODO: update Room class
         Room room = rooms.get(position);
 
         if (room == activity.getSelectedRoom()) {

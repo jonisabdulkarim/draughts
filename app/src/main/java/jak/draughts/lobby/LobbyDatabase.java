@@ -11,7 +11,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jak.draughts.Room;
 import jak.draughts.User;
@@ -85,7 +87,7 @@ public class LobbyDatabase  {
             room.setGameMode("D");
             room.setUserHostId(user1.getId());
             room.setUserJoinId(user2.getId());
-            room.setStatus(1);
+            room.setStatus(ROOM_FULL);
             ref = database.collection("rooms").document();
             room.setRoomId(ref.getId());
             ref.set(room);
@@ -102,7 +104,7 @@ public class LobbyDatabase  {
         Room room = new Room();
         room.setGameMode("D");
         room.setUserHostId(user1.getId());
-        room.setStatus(0);
+        room.setStatus(ROOM_VACANT);
         ref = database.collection("rooms").document();
         room.setRoomId(ref.getId());
         ref.set(room);
@@ -122,10 +124,18 @@ public class LobbyDatabase  {
         Room room = new Room();
         room.setRoomId(ref.getId());
         room.setUserHostId(createUser().getId());
-        room.setStatus(0);
+        room.setStatus(ROOM_VACANT);
 
         ref.set(room);
         return room.getRoomId();
+    }
+
+    public void joinRoom(String roomId) {
+        Map<String, Object> roomFields = new HashMap<>();
+        roomFields.put("userJoinId", createUser().getId());
+        roomFields.put("status", ROOM_FULL);
+
+        database.collection("rooms").document(roomId).update(roomFields);
     }
 
     /**

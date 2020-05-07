@@ -29,6 +29,10 @@ public class LobbyActivity extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
 
+    private static final int ROOM_VACANT = 0;
+    private static final int ROOM_FULL = 1;
+    private static final int ROOM_PLAYING = 2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,7 +121,18 @@ public class LobbyActivity extends AppCompatActivity {
      * "Guest" with the option of changing it.
      */
     public void joinRoom(View view) {
-        // TODO: join room
+        if (selectedRoom.getStatus() == ROOM_VACANT) {
+            String roomId = selectedRoom.getRoomId();
+            database.joinRoom(roomId);
+
+            Intent intent = new Intent(this, RoomActivity.class);
+            intent.putExtra("ROOM_ID", roomId);
+
+            startActivity(intent);
+        } else {
+            // TODO: popup appears, "cannot join non-vacant room"
+
+        }
     }
 
     /**
