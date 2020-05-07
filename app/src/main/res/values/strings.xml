@@ -7,4 +7,9 @@
     <string name="back">Back</string>
     <string name="create">Create</string>
     <string name="join">Join</string>
+    <string name="roomHostPlaceholder">User: exampleHost\n Id: 0123456789</string>
+    <string name="roomJoinPlaceholder">User: exampleJoin\n Id: 9876543210</string>
+    <string name="invite">Invite</string>
+    <string name="start">Start</string>
+
 </resources>

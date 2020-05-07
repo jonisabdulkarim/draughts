@@ -68,7 +68,6 @@ public class LobbyDatabase  {
                 "Guy", "Hector", "India", "Julia", "Kevin", "Liam"
         };
 
-        long rank = 1L;
         for (int i = 0; i < 10; i+=2) {
             // TODO: room test data
             User user1 = new User();
