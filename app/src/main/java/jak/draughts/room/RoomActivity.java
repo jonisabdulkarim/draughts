@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,6 +22,8 @@ import jak.draughts.User;
 
 public class RoomActivity extends AppCompatActivity {
 
+    boolean isCreator;
+
     String TAG;
     Room room;
     User host;
@@ -26,6 +31,8 @@ public class RoomActivity extends AppCompatActivity {
 
     TextView hostTextView;
     TextView joinTextView;
+    EditText hostEditText;
+    EditText joinEditText;
 
     FirebaseFirestore db;
 
@@ -35,13 +42,42 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         TAG = this.getClass().getName();
+
         hostTextView = findViewById(R.id.roomHostTextView);
         joinTextView = findViewById(R.id.roomJoinTextView);
+        hostEditText = findViewById(R.id.roomHostEditText);
+        joinEditText = findViewById(R.id.roomJoinEditText);
+
         db = FirebaseFirestore.getInstance();
 
         Intent intent = getIntent();
         String roomId = intent.getStringExtra("ROOM_ID");
         getRoom(roomId);
+    }
+
+    private void initialiseEditTextListener() {
+        setUpEditTextListener(hostEditText, host);
+
+        if (room.getUserJoinId() != null)
+            setUpEditTextListener(joinEditText, join);
+    }
+
+    private void setUpEditTextListener(EditText editText, final User user) {
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
+                boolean handled = false;
+
+                if (i == EditorInfo.IME_ACTION_DONE) {
+                    user.setName(textView.getText().toString());
+                    handled = true;
+                    updateUserName(user);
+                    Log.d(TAG, "Name changed to: " + user.getName());
+                }
+
+                return handled;
+            }
+        });
     }
 
     /**
@@ -76,11 +112,19 @@ public class RoomActivity extends AppCompatActivity {
         Log.d(TAG, "User host id: " + room.getUserHostId());
         Log.d(TAG, "Game mode: " + room.getGameMode());
 
+        setIsCreator(room.getUserJoinId() == null);
         getUser('H', room.getUserHostId());
 
-        if (room.getUserJoinId() != null) {
+        if (isCreator) {
+            setNotFocusable(joinEditText);
+        } else {
             getUser('J', room.getUserJoinId());
+            setNotFocusable(hostEditText);
         }
+    }
+
+    private void setNotFocusable(EditText editText) {
+        editText.setFocusable(false);
     }
 
     /**
@@ -116,13 +160,22 @@ public class RoomActivity extends AppCompatActivity {
     private void getUserComplete(final char userType, User user) {
         if (userType == 'H') {
             setHost(user);
-            writeHost();
+            // writeHost();
         } else if (userType == 'J') {
             setJoin(user);
-            writeJoin();
+            // writeJoin();
         } else {
             throw new IllegalArgumentException();
         }
+
+        // initialise editText when: create room -> host is ready, join room -> both users ready
+        if (host != null && (join != null || isCreator)) {
+            initialiseEditTextListener();
+        }
+    }
+
+    public void updateUserName(final User user) {
+        db.collection("users").document(user.getId()).set(user);
     }
 
     public void setHost(User host) {
@@ -138,7 +191,7 @@ public class RoomActivity extends AppCompatActivity {
         sb.append("Host:").append(host.getName()).append("\n");
         sb.append("Id: ").append(host.getId());
 
-        // hostTextView.setText(sb.toString());
+        hostTextView.setText(sb.toString());
     }
 
     private void writeJoin() {
@@ -146,6 +199,14 @@ public class RoomActivity extends AppCompatActivity {
         sb.append("Join:").append(join.getName()).append("\n");
         sb.append("Id: ").append(join.getId());
 
-        // joinTextView.setText(sb.toString());
+        joinTextView.setText(sb.toString());
+    }
+
+    private boolean isCreator() {
+        return isCreator;
+    }
+
+    private void setIsCreator(boolean isCreator) {
+        this.isCreator = isCreator;
     }
 }
