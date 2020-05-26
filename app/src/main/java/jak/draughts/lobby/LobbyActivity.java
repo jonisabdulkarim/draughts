@@ -112,10 +112,16 @@ public class LobbyActivity extends AppCompatActivity {
      * Starts the RoomActivity with the Intent to join
      * the selected room. Called by the "Join" button in
      * the Lobby screen. The user will be temporarily named
-     * "Guest" with the option of changing it.
+     * "Guest" with the option of changing it in Room.
+     * Joining while not selecting a room, or attempting
+     * to join a room, will cause a pop-up to appear to
+     * inform the user of the error.
      */
     public void joinRoom(View view) {
-        if (selectedRoom.getStatus() == ROOM_VACANT) {
+        if (selectedRoom == null) {
+            // TODO: popup: "must select room before joining"
+
+        } else if (selectedRoom.getStatus() == ROOM_VACANT) {
             String roomId = selectedRoom.getRoomId();
             database.joinRoom(roomId);
 
@@ -124,7 +130,7 @@ public class LobbyActivity extends AppCompatActivity {
 
             startActivity(intent);
         } else {
-            // TODO: popup appears, "cannot join non-vacant room"
+            // TODO: popup: "cannot join non-vacant room"
 
         }
     }
