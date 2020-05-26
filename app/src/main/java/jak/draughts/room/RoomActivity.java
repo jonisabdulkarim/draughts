@@ -35,8 +35,8 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         TAG = this.getClass().getName();
-        hostTextView = findViewById(R.id.roomHostText);
-        joinTextView = findViewById(R.id.roomJoinText);
+        hostTextView = findViewById(R.id.roomHostTextView);
+        joinTextView = findViewById(R.id.roomJoinTextView);
         db = FirebaseFirestore.getInstance();
 
         Intent intent = getIntent();
@@ -138,7 +138,7 @@ public class RoomActivity extends AppCompatActivity {
         sb.append("Host:").append(host.getName()).append("\n");
         sb.append("Id: ").append(host.getId());
 
-        hostTextView.setText(sb.toString());
+        // hostTextView.setText(sb.toString());
     }
 
     private void writeJoin() {
@@ -146,6 +146,6 @@ public class RoomActivity extends AppCompatActivity {
         sb.append("Join:").append(join.getName()).append("\n");
         sb.append("Id: ").append(join.getId());
 
-        joinTextView.setText(sb.toString());
+        // joinTextView.setText(sb.toString());
     }
 }

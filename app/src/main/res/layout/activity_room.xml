@@ -17,56 +17,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/roomHostLinearLayout"
-        android:layout_width="330dp"
-        android:layout_height="135dp"
-        android:layout_marginTop="64dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomTopToolbar">
-
-        <ImageButton
-            android:id="@+id/roomHostImage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/red_man_disc" />
-
-        <TextView
-            android:id="@+id/roomHostText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/roomHostPlaceholder" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/roomJoinLinearLayout"
-        android:layout_width="330dp"
-        android:layout_height="135dp"
-        android:layout_marginTop="64dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomHostLinearLayout">
-
-        <ImageButton
-            android:id="@+id/roomJoinImage"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            app:srcCompat="@drawable/white_man_disc" />
-
-        <TextView
-            android:id="@+id/roomJoinText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/roomJoinPlaceholder" />
-    </LinearLayout>
-
     <Button
         android:id="@+id/roomButtonInvite"
         android:layout_width="wrap_content"
@@ -97,5 +47,152 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/roomInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Room Info"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomTopToolbar" />
+
+    <TextView
+        android:id="@+id/roomHostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Host:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:ems="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomInfoTextView" />
+
+    <EditText
+        android:id="@+id/roomHostEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:hint="Write name here"
+        app:layout_constraintBottom_toBottomOf="@+id/roomHostTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/roomHostTextView"
+        app:layout_constraintTop_toTopOf="@+id/roomHostTextView" />
+
+    <TextView
+        android:id="@+id/roomJoinTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Join:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:ems="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomHostTextView" />
+
+    <EditText
+        android:id="@+id/roomJoinEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:hint="Write name here"
+        app:layout_constraintBottom_toBottomOf="@+id/roomJoinTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/roomJoinTextView"
+        app:layout_constraintTop_toTopOf="@+id/roomJoinTextView" />
+
+    <TextView
+        android:id="@+id/roomGameInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Game Info"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomJoinTextView" />
+
+    <TextView
+        android:id="@+id/roomGameModeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Game Mode:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomGameInfoTextView" />
+
+    <TextView
+        android:id="@+id/roomTurnTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="3"
+        android:text="Turn:"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomGameModeTextView" />
+
+    <Switch
+        android:id="@+id/switch1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Host starts first"
+        app:layout_constraintBottom_toBottomOf="@+id/roomTurnTextView"
+        app:layout_constraintEnd_toEndOf="@+id/chipGroup"
+        app:layout_constraintStart_toStartOf="@+id/chipGroup"
+        app:layout_constraintTop_toTopOf="@+id/roomTurnTextView" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroup"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:layout_constraintBottom_toBottomOf="@+id/roomGameModeTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/roomGameModeTextView">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GAYP"
+            app:layout_constraintBottom_toBottomOf="@+id/roomGameModeTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/roomGameModeTextView"
+            app:layout_constraintTop_toTopOf="@+id/roomGameModeTextView" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3MOVE" />
+
+    </com.google.android.material.chip.ChipGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
