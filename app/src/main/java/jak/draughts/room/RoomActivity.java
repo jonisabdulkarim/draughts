@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,6 +37,8 @@ public class RoomActivity extends AppCompatActivity {
     EditText joinEditText; // join text box
 
     ChipGroup chipGroup;
+    Chip chipGAYP;
+    Chip chip3MOVE;
 
     FirebaseFirestore db;
 
@@ -45,20 +48,47 @@ public class RoomActivity extends AppCompatActivity {
         setContentView(R.layout.activity_room);
 
         TAG = this.getClass().getName();
-
-        hostTextView = findViewById(R.id.roomHostTextView);
-        joinTextView = findViewById(R.id.roomJoinTextView);
-        hostEditText = findViewById(R.id.roomHostEditText);
-        joinEditText = findViewById(R.id.roomJoinEditText);
-        // chipGroup = findViewById(R.id.chipGroup);
-
         db = FirebaseFirestore.getInstance();
+
+        initialiseTextViews();
+        initialiseChipGroup();
 
         Intent intent = getIntent();
         String roomId = intent.getStringExtra("ROOM_ID");
         isCreator = intent.getBooleanExtra("isCreator", true);
         getRoom(roomId);
+    }
 
+    private void initialiseTextViews() {
+        hostTextView = findViewById(R.id.roomHostTextView);
+        joinTextView = findViewById(R.id.roomJoinTextView);
+        hostEditText = findViewById(R.id.roomHostEditText);
+        joinEditText = findViewById(R.id.roomJoinEditText);
+    }
+
+    private void initialiseChipGroup() {
+        chipGroup = findViewById(R.id.roomChipGroupGameMode);
+        chipGAYP = findViewById(R.id.roomChipGameModeGAYP);
+        chip3MOVE = findViewById(R.id.roomChipGameMode3MOVE);
+        setChipGroupListener();
+    }
+
+    private void setChipGroupListener() {
+        chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(ChipGroup group, int checkedId) {
+                if (checkedId == -1) { // deselect -> revert to default
+                    chipGAYP.setChecked(true);
+                    room.setGameMode("GAYP");
+                } else if (checkedId == chipGAYP.getId()) {
+                    room.setGameMode("GAYP");
+                } else if (checkedId == chip3MOVE.getId()) {
+                    room.setGameMode("3MOVE");
+                } else {
+                    throw new IllegalStateException();
+                }
+            }
+        });
     }
 
     /**
