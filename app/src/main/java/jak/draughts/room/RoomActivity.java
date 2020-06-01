@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.chip.ChipGroup;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -29,10 +30,12 @@ public class RoomActivity extends AppCompatActivity {
     User host;
     User join;
 
-    TextView hostTextView;
-    TextView joinTextView;
-    EditText hostEditText;
-    EditText joinEditText;
+    TextView hostTextView; // "Host:" textView
+    TextView joinTextView; // "Join:" textView
+    EditText hostEditText; // host text box
+    EditText joinEditText; // join text box
+
+    ChipGroup chipGroup;
 
     FirebaseFirestore db;
 
@@ -47,21 +50,41 @@ public class RoomActivity extends AppCompatActivity {
         joinTextView = findViewById(R.id.roomJoinTextView);
         hostEditText = findViewById(R.id.roomHostEditText);
         joinEditText = findViewById(R.id.roomJoinEditText);
+        // chipGroup = findViewById(R.id.chipGroup);
 
         db = FirebaseFirestore.getInstance();
 
         Intent intent = getIntent();
         String roomId = intent.getStringExtra("ROOM_ID");
+        isCreator = intent.getBooleanExtra("isCreator", true);
         getRoom(roomId);
+
     }
 
+    /**
+     * Short-hand method that will call <tt>setUpEditTextListener(...)</tt>
+     * for the relevant user type i.e. host XOR join user.
+     * <p>
+     * The other user's data is collected using a listener on the database.
+     *
+     * @see RoomActivity#setUpEditTextListener(EditText, User)
+     */
     private void initialiseEditTextListener() {
+        // TODO: place setFocusable() method here instead
         setUpEditTextListener(hostEditText, host);
 
         if (room.getUserJoinId() != null)
             setUpEditTextListener(joinEditText, join);
     }
 
+
+    /**
+     * Sets up the this editText to listen for username changes.
+     * It will inform the database when the change is confirmed.
+     *
+     * @param editText listener will be attached to
+     * @param user which user object is updated
+     */
     private void setUpEditTextListener(EditText editText, final User user) {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -112,7 +135,6 @@ public class RoomActivity extends AppCompatActivity {
         Log.d(TAG, "User host id: " + room.getUserHostId());
         Log.d(TAG, "Game mode: " + room.getGameMode());
 
-        setIsCreator(room.getUserJoinId() == null);
         getUser('H', room.getUserHostId());
 
         if (isCreator) {
@@ -142,6 +164,7 @@ public class RoomActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot doc = task.getResult();
+                    assert doc != null;
                     User user = doc.toObject(User.class);
                     getUserComplete(userType, user);
                 }
@@ -186,6 +209,7 @@ public class RoomActivity extends AppCompatActivity {
         this.join = join;
     }
 
+    @Deprecated
     private void writeHost() {
         StringBuilder sb = new StringBuilder();
         sb.append("Host:").append(host.getName()).append("\n");
@@ -194,6 +218,7 @@ public class RoomActivity extends AppCompatActivity {
         hostTextView.setText(sb.toString());
     }
 
+    @Deprecated
     private void writeJoin() {
         StringBuilder sb = new StringBuilder();
         sb.append("Join:").append(join.getName()).append("\n");
@@ -202,11 +227,4 @@ public class RoomActivity extends AppCompatActivity {
         joinTextView.setText(sb.toString());
     }
 
-    private boolean isCreator() {
-        return isCreator;
-    }
-
-    private void setIsCreator(boolean isCreator) {
-        this.isCreator = isCreator;
-    }
 }

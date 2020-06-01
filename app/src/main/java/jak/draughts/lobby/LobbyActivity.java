@@ -111,11 +111,17 @@ public class LobbyActivity extends AppCompatActivity {
     /**
      * Starts the RoomActivity with the Intent to join
      * the selected room. Called by the "Join" button in
-     * the Lobby screen. The user will be temporarily named
+     * the Lobby screen.
+     * <p>
+     * The user will be temporarily named
      * "Guest" with the option of changing it in Room.
+     * <p>
      * Joining while not selecting a room, or attempting
      * to join a room, will cause a pop-up to appear to
      * inform the user of the error.
+     * <p>
+     * The intent will contain both the String roomId and
+     * the boolean isCreator, the latter set to false.
      */
     public void joinRoom(View view) {
         if (selectedRoom == null) {
@@ -127,6 +133,7 @@ public class LobbyActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this, RoomActivity.class);
             intent.putExtra("ROOM_ID", roomId);
+            intent.putExtra("isCreator", false);
 
             startActivity(intent);
         } else {
@@ -138,14 +145,20 @@ public class LobbyActivity extends AppCompatActivity {
     /**
      * Starts the RoomActivity with the Intent to create
      * a new room. Called by the "Create" button in
-     * the Lobby screen. The user will be temporarily named
+     * the Lobby screen.
+     * <p>
+     * The user will be temporarily named
      * "Guest" with the option of changing it.
+     * <p>
+     * The intent will contain both a String roomId and
+     * a boolean isCreator, the latter set to true.
      */
     public void createRoom(View view) {
         String roomId = database.createRoom();
 
         Intent intent = new Intent(this, RoomActivity.class);
         intent.putExtra("ROOM_ID", roomId);
+        intent.putExtra("isCreator", true);
 
         startActivity(intent);
     }
