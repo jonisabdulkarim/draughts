@@ -70,13 +70,14 @@ public class RoomActivity extends AppCompatActivity {
      * @see RoomActivity#setUpEditTextListener(EditText, User)
      */
     private void initialiseEditTextListener() {
-        // TODO: place setFocusable() method here instead
-        setUpEditTextListener(hostEditText, host);
-
-        if (room.getUserJoinId() != null)
+        if (isCreator) {
+            setUpEditTextListener(hostEditText, host);
+            joinEditText.setFocusable(false);
+        } else {
             setUpEditTextListener(joinEditText, join);
+            hostEditText.setFocusable(false);
+        }
     }
-
 
     /**
      * Sets up the this editText to listen for username changes.
@@ -115,9 +116,13 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
-                    DocumentSnapshot doc = task.getResult();
-                    room = doc.toObject(Room.class);
-                    writeRoom();
+                    DocumentSnapshot document = task.getResult();
+                    assert document != null;
+
+                    Room room = document.toObject(Room.class);
+                    assert room != null;
+
+                    setRoom(room);
                 } else {
                     Log.w(TAG, "Failed to find room with id: " + id);
                 }
@@ -129,24 +134,19 @@ public class RoomActivity extends AppCompatActivity {
      * Called by the getRoom(..) method, outputs log and
      * retrieves all users in this room.
      */
-    private void writeRoom() {
+    private void setRoom(Room room) {
         Log.d(TAG, "Room id: " + room.getRoomId());
         Log.d(TAG, "User name: " + room.getUserHostId());
         Log.d(TAG, "User host id: " + room.getUserHostId());
         Log.d(TAG, "Game mode: " + room.getGameMode());
 
+        this.room = room;
+
         getUser('H', room.getUserHostId());
 
-        if (isCreator) {
-            setNotFocusable(joinEditText);
-        } else {
+        if (!isCreator) {
             getUser('J', room.getUserJoinId());
-            setNotFocusable(hostEditText);
         }
-    }
-
-    private void setNotFocusable(EditText editText) {
-        editText.setFocusable(false);
     }
 
     /**
@@ -166,12 +166,11 @@ public class RoomActivity extends AppCompatActivity {
                     DocumentSnapshot doc = task.getResult();
                     assert doc != null;
                     User user = doc.toObject(User.class);
-                    getUserComplete(userType, user);
+                    setUser(userType, user);
                 }
             }
         });
     }
-
 
     /**
      * Called by the getUser(..) method to set the relevant
@@ -180,13 +179,11 @@ public class RoomActivity extends AppCompatActivity {
      * @param userType 'H' for host, 'J' for join
      * @param user user object that was retrieved by getUser(..)
      */
-    private void getUserComplete(final char userType, User user) {
+    private void setUser(final char userType, User user) {
         if (userType == 'H') {
             setHost(user);
-            // writeHost();
         } else if (userType == 'J') {
             setJoin(user);
-            // writeJoin();
         } else {
             throw new IllegalArgumentException();
         }
@@ -197,6 +194,11 @@ public class RoomActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Updates this user's fields in the database.
+     *
+     * @param user which will be updated
+     */
     public void updateUserName(final User user) {
         db.collection("users").document(user.getId()).set(user);
     }
