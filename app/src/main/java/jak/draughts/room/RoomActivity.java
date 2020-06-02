@@ -1,6 +1,7 @@
 package jak.draughts.room;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -17,8 +18,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import jak.draughts.R;
 import jak.draughts.Room;
@@ -27,6 +31,7 @@ import jak.draughts.User;
 public class RoomActivity extends AppCompatActivity {
 
     boolean isCreator;
+    boolean isInitialised;
 
     String TAG;
     Room room;
@@ -53,13 +58,15 @@ public class RoomActivity extends AppCompatActivity {
         TAG = this.getClass().getName();
         db = FirebaseFirestore.getInstance();
 
+        Intent intent = getIntent();
+        String roomId = intent.getStringExtra("ROOM_ID");
+        isCreator = intent.getBooleanExtra("isCreator", true);
+        isInitialised = false; // for editText, prevent re-initialising editText
+
         initialiseTextViews();
         initialiseChipGroup();
         initialiseTurnSwitch();
 
-        Intent intent = getIntent();
-        String roomId = intent.getStringExtra("ROOM_ID");
-        isCreator = intent.getBooleanExtra("isCreator", true);
         getRoom(roomId);
     }
 
@@ -81,7 +88,7 @@ public class RoomActivity extends AppCompatActivity {
                 } else {
                     room.setTurn(1);
                 }
-                updateServerRoom(room);
+                updateServerRoom();
             }
         });
     }
@@ -125,7 +132,7 @@ public class RoomActivity extends AppCompatActivity {
                 } else {
                     throw new IllegalStateException();
                 }
-                updateServerRoom(room);
+                updateServerRoom();
             }
         });
     }
@@ -146,16 +153,17 @@ public class RoomActivity extends AppCompatActivity {
             setUpEditTextListener(joinEditText, join);
             hostEditText.setFocusable(false);
         }
+        isInitialised = true;
     }
 
     /**
      * Sets up the this editText to listen for username changes.
-     * It will call updateUserName(User) to update the user
+     * It will call updateServerUser(User) to update the user
      * profile on the database.
      *
      * @param editText listener will be attached to
      * @param user which user object is updated
-     * @see RoomActivity#updateUserName(User)
+     * @see RoomActivity#updateServerUser(User)
      */
     private void setUpEditTextListener(EditText editText, final User user) {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -166,7 +174,7 @@ public class RoomActivity extends AppCompatActivity {
                 if (i == EditorInfo.IME_ACTION_DONE) {
                     user.setName(textView.getText().toString());
                     handled = true;
-                    updateUserName(user);
+                    updateServerUser(user);
                     Log.d(TAG, "Name changed to: " + user.getName());
                 }
 
@@ -212,12 +220,46 @@ public class RoomActivity extends AppCompatActivity {
         Log.d(TAG, "Game mode: " + room.getGameMode());
 
         this.room = room;
-        room.setGameMode("GAYP"); // default game mode
-
         getUser('H', room.getUserHostId());
 
-        if (!isCreator) {
+        if (isCreator) {
+            room.setGameMode("GAYP"); // default: GAYP mode
+            room.setTurn(0); // default: host first turn
+        } else {
             getUser('J', room.getUserJoinId());
+            checkChip();
+            checkTurn();
+        }
+
+        updateServerRoom(); // update room in database
+        updateLocalRoom(); // set up room listener for future changes
+    }
+
+    /**
+     * Checks the chip according to this room's game mode.
+     * The join user's listener will use call this method
+     * when entering the room and when the host user makes
+     * changes online.
+     */
+    private void checkChip() {
+        if (room.getGameMode().equals("GAYP")) {
+            chipGAYP.setChecked(true);
+        } else if (room.getGameMode().equals("3MOVE")) {
+            chip3MOVE.setChecked(true);
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    private void checkTurn() {
+        final int HOST = 0;
+        final int JOIN = 1;
+        if (room.getTurn() == HOST) {
+            turnSwitch.setChecked(true);
+        } else if (room.getTurn() == JOIN) {
+            turnSwitch.setChecked(false);
+        } else {
+            throw new IllegalStateException();
         }
     }
 
@@ -260,8 +302,10 @@ public class RoomActivity extends AppCompatActivity {
             throw new IllegalArgumentException();
         }
 
+        updateLocalUser(userType, user); // set up real-time listener on this user
+
         // initialise editText when: create room -> host is ready, join room -> both users ready
-        if (host != null && (join != null || isCreator)) {
+        if (host != null && (join != null || isCreator) && !isInitialised) {
             initialiseEditTextListener();
         }
     }
@@ -271,16 +315,80 @@ public class RoomActivity extends AppCompatActivity {
      *
      * @param user which will be updated
      */
-    public void updateUserName(final User user) {
+    public void updateServerUser(final User user) {
         db.collection("users").document(user.getId()).set(user);
     }
 
-    public void updateServerRoom(final Room room) {
+    public void updateLocalUser(final char userType, final User user) {
+        final DocumentReference docRef = db.collection("users")
+                .document(user.getId());
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed for updateLocalUser()", e);
+                } else if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Log.d(TAG, "Current data: " + documentSnapshot.getData());
+                    User tempUser = documentSnapshot.toObject(User.class);
+                    assert tempUser != null;
+                    user.setName(tempUser.getName());
+                    updateEditText(userType);
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
+    }
+
+    private void updateEditText(char userType) {
+        if (userType == 'H') {
+            hostEditText.setText(host.getName());
+        } else if (userType == 'J') {
+            joinEditText.setText(join.getName());
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    public void updateServerRoom() {
         db.collection("rooms").document(room.getRoomId()).set(room);
     }
 
-    public void updateLocalRoom(Room room) {
-        // todo: set up real-time listener
+    /**
+     * Sets up a real-time listener to this room in the database.
+     * If changes are found, the new room replaces the old one.
+     * It will always call checkChip() and checkTurn() to update
+     * room/game information.
+     * <p>
+     * It will also call the joinUser() if the joinUser object is
+     * not already initialised. This happens on the host's side,
+     * which always creates a room with a null joinUser object.
+     */
+    public void updateLocalRoom() {
+        final DocumentReference docRef = db.collection("rooms")
+                .document(room.getRoomId());
+        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed for updateLocalRoom()", e);
+                } else if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Log.d(TAG, "Current data: " + documentSnapshot.getData());
+
+                    room = documentSnapshot.toObject(Room.class);
+                    checkChip();
+                    checkTurn();
+
+                    if (join == null && room.getUserJoinId() != null) {
+                        getUser('J', room.getUserJoinId());
+                    }
+                } else {
+                    Log.d(TAG, "Current data: null");
+                }
+            }
+        });
     }
 
     public void setHost(User host) {
