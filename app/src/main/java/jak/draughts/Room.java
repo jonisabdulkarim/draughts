@@ -9,6 +9,7 @@ public class Room {
     String userJoinId;
     int status;
     String gameMode;
+    int turn; // i.e. 0 for host, 1 for join
     List<Integer> dataSet;
     Coordinates movedPiece;
 
@@ -61,5 +62,13 @@ public class Room {
 
     public void setDataSet(List<Integer> dataSet) {
         this.dataSet = dataSet;
+    }
+
+    public int getTurn() {
+        return turn;
+    }
+
+    public void setTurn(int turn) {
+        this.turn = turn;
     }
 }

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -51,15 +52,38 @@ public class RoomActivity extends AppCompatActivity {
 
         TAG = this.getClass().getName();
         db = FirebaseFirestore.getInstance();
-        turnSwitch = findViewById(R.id.roomSwitchTurn);
 
         initialiseTextViews();
         initialiseChipGroup();
+        initialiseTurnSwitch();
 
         Intent intent = getIntent();
         String roomId = intent.getStringExtra("ROOM_ID");
         isCreator = intent.getBooleanExtra("isCreator", true);
         getRoom(roomId);
+    }
+
+    private void initialiseTurnSwitch() {
+        turnSwitch = findViewById(R.id.roomSwitchTurn);
+        if (isCreator) {
+            setUpTurnSwitchListener();
+        } else {
+            turnSwitch.setClickable(false);
+        }
+    }
+
+    private void setUpTurnSwitchListener() {
+        turnSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    room.setTurn(0);
+                } else {
+                    room.setTurn(1);
+                }
+                updateServerRoom(room);
+            }
+        });
     }
 
     private void initialiseTextViews() {
@@ -73,7 +97,12 @@ public class RoomActivity extends AppCompatActivity {
         chipGroup = findViewById(R.id.roomChipGroupGameMode);
         chipGAYP = findViewById(R.id.roomChipGameModeGAYP);
         chip3MOVE = findViewById(R.id.roomChipGameMode3MOVE);
-        setChipGroupListener();
+        if (isCreator) {
+            setChipGroupListener();
+        } else {
+            chipGAYP.setClickable(false);
+            chip3MOVE.setClickable(false);
+        }
     }
 
     /**
@@ -96,6 +125,7 @@ public class RoomActivity extends AppCompatActivity {
                 } else {
                     throw new IllegalStateException();
                 }
+                updateServerRoom(room);
             }
         });
     }
@@ -243,6 +273,14 @@ public class RoomActivity extends AppCompatActivity {
      */
     public void updateUserName(final User user) {
         db.collection("users").document(user.getId()).set(user);
+    }
+
+    public void updateServerRoom(final Room room) {
+        db.collection("rooms").document(room.getRoomId()).set(room);
+    }
+
+    public void updateLocalRoom(Room room) {
+        // todo: set up real-time listener
     }
 
     public void setHost(User host) {
