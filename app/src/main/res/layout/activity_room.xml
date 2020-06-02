@@ -17,6 +17,197 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/roomInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/room_info"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomTopToolbar" />
+
+    <TextView
+        android:id="@+id/roomHostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/host_colon"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:ems="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomInfoTextView" />
+
+    <EditText
+        android:id="@+id/roomHostEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:inputType="textPersonName"
+        android:text="@string/name"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:hint="@string/write_name_here"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        app:layout_constraintBottom_toBottomOf="@+id/roomHostTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/roomHostTextView"
+        app:layout_constraintTop_toTopOf="@+id/roomHostTextView" />
+
+    <TextView
+        android:id="@+id/roomJoinTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/join_colon"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:ems="3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomHostTextView" />
+
+    <EditText
+        android:id="@+id/roomJoinEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:inputType="textPersonName"
+        android:text="@string/name"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        android:hint="@string/write_name_here"
+        android:imeOptions="actionDone"
+        android:importantForAutofill="no"
+        app:layout_constraintBottom_toBottomOf="@+id/roomJoinTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/roomJoinTextView"
+        app:layout_constraintTop_toTopOf="@+id/roomJoinTextView" />
+
+    <TextView
+        android:id="@+id/roomGameInfoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/game_info"
+        android:textColor="#000000"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomJoinTextView" />
+
+    <TextView
+        android:id="@+id/roomGameModeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/game_mode_colon"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomGameInfoTextView" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/roomChipGroupGameMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:checkedChip="@id/roomChipGameModeGAYP"
+        app:chipSpacingHorizontal="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/roomGameModeTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/roomGameModeTextView"
+        app:singleLine="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/roomChipGameModeGAYP"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="@string/gayp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/roomChipGameMode3MOVE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checkable="true"
+            android:text="@string/_3move" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <TextView
+        android:id="@+id/roomTurnTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="4"
+        android:text="@string/first_turn_colon"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomGameModeTextView" />
+
+    <Switch
+        android:id="@+id/roomSwitchTurn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:checked="true"
+        android:splitTrack="false"
+        android:text="@string/join"
+        app:layout_constraintBottom_toBottomOf="@+id/roomTurnTextView"
+        app:layout_constraintEnd_toStartOf="@+id/roomTurnHostTextView"
+        app:layout_constraintTop_toTopOf="@+id/roomTurnTextView" />
+
+    <TextView
+        android:id="@+id/roomTurnHostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:text="@string/host"
+        android:textColor="#000000"
+        android:ems="3"
+        app:layout_constraintBottom_toBottomOf="@+id/roomSwitchTurn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/roomSwitchTurn"
+        app:layout_constraintVertical_bias="0.625" />
+
+    <TextView
+        android:id="@+id/roomReadyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/opponent_status"
+        android:textColor="#000000"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomTurnTextView" />
+
+    <TextView
+        android:id="@+id/roomReadyStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/vacant"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/roomReadyTextView"
+        app:layout_constraintEnd_toEndOf="@+id/roomTurnHostTextView"
+        app:layout_constraintStart_toStartOf="@+id/roomSwitchTurn"
+        app:layout_constraintTop_toTopOf="@+id/roomReadyTextView" />
+
     <Button
         android:id="@+id/roomButtonInvite"
         android:layout_width="wrap_content"
@@ -47,173 +238,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/roomInfoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Room Info"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomTopToolbar" />
-
-    <TextView
-        android:id="@+id/roomHostTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Host:"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:ems="3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomInfoTextView" />
-
-    <EditText
-        android:id="@+id/roomHostEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:hint="Write name here"
-        android:imeOptions="actionDone"
-        app:layout_constraintBottom_toBottomOf="@+id/roomHostTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/roomHostTextView"
-        app:layout_constraintTop_toTopOf="@+id/roomHostTextView" />
-
-    <TextView
-        android:id="@+id/roomJoinTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Join:"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:ems="3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomHostTextView" />
-
-    <EditText
-        android:id="@+id/roomJoinEditText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:inputType="textPersonName"
-        android:text="Name"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        android:hint="Write name here"
-        android:imeOptions="actionDone"
-        app:layout_constraintBottom_toBottomOf="@+id/roomJoinTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/roomJoinTextView"
-        app:layout_constraintTop_toTopOf="@+id/roomJoinTextView" />
-
-    <TextView
-        android:id="@+id/roomGameInfoTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Game Info"
-        android:textColor="#000000"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomJoinTextView" />
-
-    <TextView
-        android:id="@+id/roomGameModeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="Game Mode:"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomGameInfoTextView" />
-
-    <TextView
-        android:id="@+id/roomTurnTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:ems="4"
-        android:text="First Turn:"
-        android:textColor="#000000"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/roomGameModeTextView" />
-
-    <Switch
-        android:id="@+id/roomSwitchTurn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:checked="true"
-        android:splitTrack="false"
-        android:text="Join"
-        app:layout_constraintBottom_toBottomOf="@+id/roomTurnTextView"
-        app:layout_constraintEnd_toStartOf="@+id/roomTurnHostTextView"
-        app:layout_constraintTop_toTopOf="@+id/roomTurnTextView" />
-
-    <TextView
-        android:id="@+id/roomTurnHostTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:text="Host"
-        android:textColor="#000000"
-        android:ems="2"
-        app:layout_constraintBottom_toBottomOf="@+id/roomSwitchTurn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/roomSwitchTurn"
-        app:layout_constraintVertical_bias="0.625" />
-
-    <com.google.android.material.chip.ChipGroup
-        android:id="@+id/roomChipGroupGameMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:theme="@style/Theme.MaterialComponents.Light"
-        app:checkedChip="@id/roomChipGameModeGAYP"
-        app:chipSpacingHorizontal="24dp"
-        app:layout_constraintBottom_toBottomOf="@+id/roomGameModeTextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/roomGameModeTextView"
-        app:singleLine="true"
-        app:singleSelection="true">
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/roomChipGameModeGAYP"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checkable="true"
-            android:text="GAYP" />
-
-        <com.google.android.material.chip.Chip
-            android:id="@+id/roomChipGameMode3MOVE"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checkable="true"
-            android:text="3MOVE" />
-
-    </com.google.android.material.chip.ChipGroup>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

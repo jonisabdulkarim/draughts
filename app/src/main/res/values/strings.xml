@@ -11,5 +11,21 @@
     <string name="roomJoinPlaceholder">User: exampleJoin\n Id: 9876543210</string>
     <string name="invite">Invite</string>
     <string name="start">Start</string>
+    <string name="room_info">Room Info</string>
+    <string name="host_colon">Host:</string>
+    <string name="name">Name</string>
+    <string name="write_name_here">Write name here</string>
+    <string name="join_colon">Join:</string>
+    <string name="name">Name</string>
+    <string name="write_name_here">Write name here</string>
+    <string name="game_info">Game Info</string>
+    <string name="game_mode_colon">Game Mode:</string>
+    <string name="first_turn_colon">First Turn:</string>
+    <string name="join">Join</string>
+    <string name="host">Host</string>
+    <string name="gayp">GAYP</string>
+    <string name="_3move">3MOVE</string>
+    <string name="opponent_status">Opponent Status:</string>
+    <string name="vacant">Vacant</string>
 
 </resources>
