@@ -7,9 +7,9 @@ public class Room {
     String roomId;
     String userHostId;
     String userJoinId;
-    int status;
+    int status; // {0: vacant, 1: full, 2: ready, 3: playing, 4: result}
     String gameMode;
-    int turn; // i.e. 0 for host, 1 for join
+    int turn; // {0: host, 1: join}
     List<Integer> dataSet;
     Coordinates movedPiece;
 

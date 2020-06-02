@@ -42,6 +42,7 @@ public class RoomActivity extends AppCompatActivity {
     TextView joinTextView; // "Join:" textView
     EditText hostEditText; // host text box
     EditText joinEditText; // join text box
+    TextView opponentStatus;
 
     ChipGroup chipGroup;
     Chip chipGAYP;

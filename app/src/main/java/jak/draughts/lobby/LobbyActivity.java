@@ -31,7 +31,8 @@ public class LobbyActivity extends AppCompatActivity {
 
     private static final int ROOM_VACANT = 0;
     private static final int ROOM_FULL = 1;
-    private static final int ROOM_PLAYING = 2;
+    private static final int ROOM_READY = 2;
+    private static final int ROOM_PLAYING = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

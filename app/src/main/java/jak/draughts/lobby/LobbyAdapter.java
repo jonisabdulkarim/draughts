@@ -10,10 +10,15 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.List;
 
 import jak.draughts.R;
 import jak.draughts.Room;
+import jak.draughts.User;
 
 public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHolder> {
 
@@ -23,7 +28,8 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
 
     private static final int ROOM_VACANT = 0;
     private static final int ROOM_FULL = 1;
-    private static final int ROOM_PLAYING = 2;
+    private static final int ROOM_READY = 2;
+    private static final int ROOM_PLAYING = 3;
 
     public LobbyAdapter(LobbyActivity activity, List<Room> rooms) {
         this.activity = activity;
@@ -42,15 +48,32 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
 
     @Override
     public void onBindViewHolder(@NonNull LobbyViewHolder holder, int position) {
-        holder.textView.setText(chooseText(position));
+        Room room = rooms.get(position);
+        chooseText(holder, room);
 
-        chooseColor(holder, position);
+        chooseColor(holder, room);
     }
 
-    private String chooseText(int position) {
+    private void chooseText(final @NonNull LobbyViewHolder holder, final Room room) {
+        // FIXME: get rid of DB code in adapter
+        FirebaseFirestore.getInstance().collection("users")
+                .document(room.getUserHostId()).get().addOnSuccessListener(
+                new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        assert user != null;
+                        String hostName = user.getName();
+                        holder.textView.setText(writeText(room, hostName));
+                    }
+                });
+    }
+
+    private String writeText(Room room, String hostName) {
         StringBuilder sb = new StringBuilder();
-        Room room = rooms.get(position);
-        sb.append("Host: ").append(room.getUserHostId());
+        sb.append("Room Id: ").append(room.getRoomId());
+        sb.append("\n");
+        sb.append("Host: ").append(hostName);
         sb.append("\n");
         sb.append("Game Mode: ").append(room.getGameMode());
         sb.append("\n");
@@ -64,6 +87,8 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
                 return "VACANT";
             case ROOM_FULL:
                 return "FULL";
+            case ROOM_READY:
+                return "READY";
             case ROOM_PLAYING:
                 return "PLAYING";
             default:
@@ -71,23 +96,26 @@ public class LobbyAdapter extends RecyclerView.Adapter<LobbyAdapter.LobbyViewHol
         }
     }
 
-    private void chooseColor(@NonNull LobbyViewHolder holder, int position) {
-        holder.textView.setBackground(chooseColor(position));
+    private void chooseColor(@NonNull LobbyViewHolder holder, Room room) {
+        holder.textView.setBackground(chooseColor(room));
     }
 
-    private ColorDrawable chooseColor(int position) {
-        Room room = rooms.get(position);
-
+    private ColorDrawable chooseColor(Room room) {
         if (room == activity.getSelectedRoom()) {
             return new ColorDrawable(context.getColor(R.color.colorBoardSelected));
-        } else if (room.getStatus() == ROOM_VACANT) {
-            return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
-        } else if (room.getStatus() == ROOM_FULL) {
-            return new ColorDrawable(context.getColor(R.color.colorBoardGreen));
-        } else if (room.getStatus() == ROOM_PLAYING){
-            return new ColorDrawable(context.getColor(R.color.colorBoardCaptureSelect));
-        } else {
-            throw new IllegalStateException();
+        }
+
+        switch(room.getStatus()) {
+            case ROOM_VACANT:
+                return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
+            case ROOM_FULL:
+                return new ColorDrawable(context.getColor(R.color.colorBoardGreen));
+            case ROOM_READY:
+                return new ColorDrawable(context.getColor(R.color.colorAccent));
+            case ROOM_PLAYING:
+                return new ColorDrawable(context.getColor(R.color.colorBoardCaptureSelect));
+            default:
+                throw new IllegalStateException();
         }
     }
 
