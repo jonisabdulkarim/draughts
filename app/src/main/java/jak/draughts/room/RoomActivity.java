@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +40,7 @@ public class RoomActivity extends AppCompatActivity {
     ChipGroup chipGroup;
     Chip chipGAYP;
     Chip chip3MOVE;
+    Switch turnSwitch;
 
     FirebaseFirestore db;
 
@@ -49,6 +51,7 @@ public class RoomActivity extends AppCompatActivity {
 
         TAG = this.getClass().getName();
         db = FirebaseFirestore.getInstance();
+        turnSwitch = findViewById(R.id.roomSwitchTurn);
 
         initialiseTextViews();
         initialiseChipGroup();
@@ -73,6 +76,12 @@ public class RoomActivity extends AppCompatActivity {
         setChipGroupListener();
     }
 
+    /**
+     * Sets checkedChangeListener for the room's chip group.
+     * It will default to "GAYP" when deselecting chips.
+     * Otherwise, it will update the room's game mode to the
+     * newly selected chip.
+     */
     private void setChipGroupListener() {
         chipGroup.setOnCheckedChangeListener(new ChipGroup.OnCheckedChangeListener() {
             @Override
@@ -111,10 +120,12 @@ public class RoomActivity extends AppCompatActivity {
 
     /**
      * Sets up the this editText to listen for username changes.
-     * It will inform the database when the change is confirmed.
+     * It will call updateUserName(User) to update the user
+     * profile on the database.
      *
      * @param editText listener will be attached to
      * @param user which user object is updated
+     * @see RoomActivity#updateUserName(User)
      */
     private void setUpEditTextListener(EditText editText, final User user) {
         editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -171,6 +182,7 @@ public class RoomActivity extends AppCompatActivity {
         Log.d(TAG, "Game mode: " + room.getGameMode());
 
         this.room = room;
+        room.setGameMode("GAYP"); // default game mode
 
         getUser('H', room.getUserHostId());
 

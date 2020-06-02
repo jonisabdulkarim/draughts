@@ -152,8 +152,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:ems="3"
-        android:text="Turn:"
+        android:ems="4"
+        android:text="First Turn:"
         android:textColor="#000000"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -163,11 +163,25 @@
         android:id="@+id/roomSwitchTurn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="Host starts first"
+        android:layout_marginEnd="8dp"
+        android:checked="true"
+        android:splitTrack="false"
+        android:text="Join"
         app:layout_constraintBottom_toBottomOf="@+id/roomTurnTextView"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/roomTurnHostTextView"
         app:layout_constraintTop_toTopOf="@+id/roomTurnTextView" />
+
+    <TextView
+        android:id="@+id/roomTurnHostTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:text="Host"
+        android:textColor="#000000"
+        app:layout_constraintBottom_toBottomOf="@+id/roomSwitchTurn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/roomSwitchTurn"
+        app:layout_constraintVertical_bias="0.625" />
 
     <com.google.android.material.chip.ChipGroup
         android:id="@+id/roomChipGroupGameMode"
@@ -199,10 +213,6 @@
 
     </com.google.android.material.chip.ChipGroup>
 
-    <!--
-    app:layout_constraintBottom_toBottomOf="@+id/roomGameModeTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/roomGameModeTextView"
-            app:layout_constraintTop_toTopOf="@+id/roomGameModeTextView"
-    -->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
