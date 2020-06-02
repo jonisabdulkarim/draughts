@@ -24,5 +24,6 @@
     <string name="_3move">3MOVE</string>
     <string name="opponent_status">Opponent Status:</string>
     <string name="vacant">Vacant</string>
+    <string name="ready">READY</string>
 
 </resources>

@@ -4,6 +4,16 @@ import java.util.List;
 
 public class Room {
 
+    // status: int
+    public static final int VACANT = 0;
+    public static final int FULL = 1;
+    public static final int READY = 2;
+    public static final int PLAYING = 3;
+
+    // turn: int
+    public static final int HOST = 0;
+    public static final int JOIN = 1;
+
     String roomId;
     String userHostId;
     String userJoinId;

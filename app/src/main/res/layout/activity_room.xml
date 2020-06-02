@@ -186,7 +186,7 @@
         app:layout_constraintVertical_bias="0.625" />
 
     <TextView
-        android:id="@+id/roomReadyTextView"
+        android:id="@+id/roomOpponentStatusTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -198,15 +198,15 @@
         app:layout_constraintTop_toBottomOf="@+id/roomTurnTextView" />
 
     <TextView
-        android:id="@+id/roomReadyStatusTextView"
+        android:id="@+id/roomOpponentStatusLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/vacant"
         android:textColor="#000000"
-        app:layout_constraintBottom_toBottomOf="@+id/roomReadyTextView"
+        app:layout_constraintBottom_toBottomOf="@+id/roomOpponentStatusTextView"
         app:layout_constraintEnd_toEndOf="@+id/roomTurnHostTextView"
         app:layout_constraintStart_toStartOf="@+id/roomSwitchTurn"
-        app:layout_constraintTop_toTopOf="@+id/roomReadyTextView" />
+        app:layout_constraintTop_toTopOf="@+id/roomOpponentStatusTextView" />
 
     <Button
         android:id="@+id/roomButtonInvite"
@@ -223,6 +223,7 @@
         android:layout_width="88dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="64dp"
+        android:onClick="startButtonOnClick"
         android:text="@string/start"
         app:layout_constraintBottom_toBottomOf="@+id/roomBotToolbar"
         app:layout_constraintEnd_toEndOf="@id/roomBotToolbar"

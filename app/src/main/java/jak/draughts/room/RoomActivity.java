@@ -8,7 +8,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -27,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestoreException;
 import jak.draughts.R;
 import jak.draughts.Room;
 import jak.draughts.User;
+import jak.draughts.game.GameActivity;
 
 public class RoomActivity extends AppCompatActivity {
 
@@ -38,16 +41,18 @@ public class RoomActivity extends AppCompatActivity {
     User host;
     User join;
 
+    TextView statusTextView;
     TextView hostTextView; // "Host:" textView
     TextView joinTextView; // "Join:" textView
     EditText hostEditText; // host text box
     EditText joinEditText; // join text box
-    TextView opponentStatus;
 
     ChipGroup chipGroup;
-    Chip chipGAYP;
-    Chip chip3MOVE;
+    Chip gaypChip;
+    Chip moveChip;
     Switch turnSwitch;
+    Button startButton;
+    Button inviteButton;
 
     FirebaseFirestore db;
 
@@ -67,8 +72,73 @@ public class RoomActivity extends AppCompatActivity {
         initialiseTextViews();
         initialiseChipGroup();
         initialiseTurnSwitch();
+        initialiseStartButton();
 
         getRoom(roomId);
+    }
+
+    public void startButtonOnClick(View view) {
+        if (isCreator) { // START button
+            if (room.getStatus() == Room.READY) {
+                // TODO: start the game! check details first though
+                if (isValidString(room.getGameMode())
+                        && isValidString(room.getUserHostId())
+                        && isValidString(room.getUserJoinId())
+                        && isValidString(room.getRoomId())
+                        && (room.getTurn() == Room.HOST || room.getTurn() == Room.JOIN)) {
+
+                    startGame();
+                } else {
+                    Log.d(TAG, "Can't start game. One of the details are invalid. Room: " + room);
+                }
+            } else if (room.getStatus() == Room.FULL) {
+                // TODO: popup: "Opponent must be ready"
+            } else {
+                // TODO: popup: "An opponent must join the room first"
+            }
+        } else { // READY button
+            if (room.getStatus() == Room.READY) { // unready, if already ready
+                room.setStatus(Room.FULL);
+            } else { // else ready up
+                room.setStatus(Room.READY);
+            }
+
+            updateServerRoom();
+        }
+    }
+
+    private void startGame() {
+        Log.d(TAG, "Starting game...");
+        // TODO: set room status to PLAYING, allow join to listen for that status
+        // TODO: and enter GameAct with Intent
+        // considerations:
+        // firstTurn, send as extra bool
+        // set up real-time listeners on GameAct
+        // checkStatus() for Room.PLAYING
+        // move database methods to separate RoomDatabase class
+
+        // Intent intent = new Intent(this, GameActivity.class);
+    }
+
+    private boolean isValidString(String string) {
+        return string != null && string.length() != 0;
+    }
+
+    // TODO: long-term goal
+    private void initialiseInviteButton() {
+        inviteButton = findViewById(R.id.roomButtonInvite);
+    }
+
+    /**
+     * Initialises 'START' button, and if joining, sets its
+     * text to 'READY' instead.
+     */
+    private void initialiseStartButton() {
+        startButton = findViewById(R.id.roomButtonStart);
+
+        if (!isCreator) {
+            startButton.setText(R.string.ready);
+        }
     }
 
     private void initialiseTurnSwitch() {
@@ -99,17 +169,18 @@ public class RoomActivity extends AppCompatActivity {
         joinTextView = findViewById(R.id.roomJoinTextView);
         hostEditText = findViewById(R.id.roomHostEditText);
         joinEditText = findViewById(R.id.roomJoinEditText);
+        statusTextView = findViewById(R.id.roomOpponentStatusLabel);
     }
 
     private void initialiseChipGroup() {
         chipGroup = findViewById(R.id.roomChipGroupGameMode);
-        chipGAYP = findViewById(R.id.roomChipGameModeGAYP);
-        chip3MOVE = findViewById(R.id.roomChipGameMode3MOVE);
+        gaypChip = findViewById(R.id.roomChipGameModeGAYP);
+        moveChip = findViewById(R.id.roomChipGameMode3MOVE);
         if (isCreator) {
             setChipGroupListener();
         } else {
-            chipGAYP.setClickable(false);
-            chip3MOVE.setClickable(false);
+            gaypChip.setClickable(false);
+            moveChip.setClickable(false);
         }
     }
 
@@ -124,11 +195,11 @@ public class RoomActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(ChipGroup group, int checkedId) {
                 if (checkedId == -1) { // deselect -> revert to default
-                    chipGAYP.setChecked(true);
+                    gaypChip.setChecked(true);
                     room.setGameMode("GAYP");
-                } else if (checkedId == chipGAYP.getId()) {
+                } else if (checkedId == gaypChip.getId()) {
                     room.setGameMode("GAYP");
-                } else if (checkedId == chip3MOVE.getId()) {
+                } else if (checkedId == moveChip.getId()) {
                     room.setGameMode("3MOVE");
                 } else {
                     throw new IllegalStateException();
@@ -163,7 +234,7 @@ public class RoomActivity extends AppCompatActivity {
      * profile on the database.
      *
      * @param editText listener will be attached to
-     * @param user which user object is updated
+     * @param user     which user object is updated
      * @see RoomActivity#updateServerUser(User)
      */
     private void setUpEditTextListener(EditText editText, final User user) {
@@ -210,22 +281,30 @@ public class RoomActivity extends AppCompatActivity {
         });
     }
 
+    private void logRoomData() {
+        Log.d(TAG, "Room id: " + room.getRoomId());
+        Log.d(TAG, "Game mode: " + room.getGameMode());
+        Log.d(TAG, "Status: " + room.getStatus());
+        Log.d(TAG, "Turn: " + room.getTurn());
+        Log.d(TAG, "Host id: " + room.getUserHostId());
+        Log.d(TAG, "Join id: " + room.getUserJoinId());
+        if (host != null)
+            Log.d(TAG, "Host name: " + host.getName());
+        if (join != null)
+            Log.d(TAG, "Join name: " + join.getName());
+    }
+
     /**
      * Called by the getRoom(..) method, outputs log and
      * retrieves all users in this room.
      */
     private void setRoom(Room room) {
-        Log.d(TAG, "Room id: " + room.getRoomId());
-        Log.d(TAG, "User name: " + room.getUserHostId());
-        Log.d(TAG, "User host id: " + room.getUserHostId());
-        Log.d(TAG, "Game mode: " + room.getGameMode());
-
         this.room = room;
         getUser('H', room.getUserHostId());
 
         if (isCreator) {
             room.setGameMode("GAYP"); // default: GAYP mode
-            room.setTurn(0); // default: host first turn
+            room.setTurn(Room.HOST); // default: host first turn
         } else {
             getUser('J', room.getUserJoinId());
             checkChip();
@@ -234,6 +313,8 @@ public class RoomActivity extends AppCompatActivity {
 
         updateServerRoom(); // update room in database
         updateLocalRoom(); // set up room listener for future changes
+
+        logRoomData();
     }
 
     /**
@@ -244,21 +325,31 @@ public class RoomActivity extends AppCompatActivity {
      */
     private void checkChip() {
         if (room.getGameMode().equals("GAYP")) {
-            chipGAYP.setChecked(true);
+            gaypChip.setChecked(true);
         } else if (room.getGameMode().equals("3MOVE")) {
-            chip3MOVE.setChecked(true);
+            moveChip.setChecked(true);
         } else {
             throw new IllegalStateException();
         }
     }
 
     private void checkTurn() {
-        final int HOST = 0;
-        final int JOIN = 1;
-        if (room.getTurn() == HOST) {
+        if (room.getTurn() == Room.HOST) {
             turnSwitch.setChecked(true);
-        } else if (room.getTurn() == JOIN) {
+        } else if (room.getTurn() == Room.JOIN) {
             turnSwitch.setChecked(false);
+        } else {
+            throw new IllegalStateException();
+        }
+    }
+
+    private void checkStatus() {
+        if (room.getStatus() == Room.VACANT) {
+            statusTextView.setText("Vacant");
+        } else if (room.getStatus() == Room.FULL) {
+            statusTextView.setText("Not Ready");
+        } else if (room.getStatus() == Room.READY) {
+            statusTextView.setText("Ready");
         } else {
             throw new IllegalStateException();
         }
@@ -270,7 +361,7 @@ public class RoomActivity extends AppCompatActivity {
      * variable given the <tt>userType</tt>.
      *
      * @param userType 'H' for host user, 'J' for join
-     * @param userId String id of user to retrieve
+     * @param userId   String id of user to retrieve
      */
     private void getUser(final char userType, String userId) {
         db.collection("users").document(userId)
@@ -292,7 +383,7 @@ public class RoomActivity extends AppCompatActivity {
      * variables and call the relevant textView writing methods.
      *
      * @param userType 'H' for host, 'J' for join
-     * @param user user object that was retrieved by getUser(..)
+     * @param user     user object that was retrieved by getUser(..)
      */
     private void setUser(final char userType, User user) {
         if (userType == 'H') {
@@ -381,6 +472,7 @@ public class RoomActivity extends AppCompatActivity {
                     room = documentSnapshot.toObject(Room.class);
                     checkChip();
                     checkTurn();
+                    checkStatus();
 
                     if (join == null && room.getUserJoinId() != null) {
                         getUser('J', room.getUserJoinId());
