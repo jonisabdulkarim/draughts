@@ -81,13 +81,8 @@ public class RoomActivity extends AppCompatActivity {
         if (isCreator) { // START button
             if (room.getStatus() == Room.READY) {
                 // TODO: start the game! check details first though
-                if (isValidString(room.getGameMode())
-                        && isValidString(room.getUserHostId())
-                        && isValidString(room.getUserJoinId())
-                        && isValidString(room.getRoomId())
-                        && (room.getTurn() == Room.HOST || room.getTurn() == Room.JOIN)) {
-
-                    startGame();
+                if (verifyGameReady()) {
+                    hostStartGame();
                 } else {
                     Log.d(TAG, "Can't start game. One of the details are invalid. Room: " + room);
                 }
@@ -107,19 +102,39 @@ public class RoomActivity extends AppCompatActivity {
         }
     }
 
-    private void startGame() {
+    private void hostStartGame() {
         Log.d(TAG, "Starting game...");
-        // TODO: set room status to PLAYING, allow join to listen for that status
-        // TODO: and enter GameAct with Intent
-        // considerations:
-        // firstTurn, send as extra bool
-        // set up real-time listeners on GameAct
-        // checkStatus() for Room.PLAYING
-        // move database methods to separate RoomDatabase class
 
-        // Intent intent = new Intent(this, GameActivity.class);
+        room.setStatus(Room.PLAYING);
+        updateServerRoom(); // update room -> listener detect change -> startGame()
     }
 
+    private void startGame() {
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra("ROOM_ID", room.getRoomId());
+        startActivity(intent);
+    }
+
+
+    /**
+     * Ensures this room has valid fields before starting game.
+     *
+     * @return true if all fields are valid, else false
+     */
+    private boolean verifyGameReady() {
+        return isValidString(room.getGameMode())
+                && isValidString(room.getUserHostId())
+                && isValidString(room.getUserJoinId())
+                && isValidString(room.getRoomId())
+                && (room.getTurn() == Room.HOST || room.getTurn() == Room.JOIN);
+    }
+
+    /**
+     * Checks if given string exists and is non-empty.
+     *
+     * @param string to be checked
+     * @return true if not null AND non-empty, else false
+     */
     private boolean isValidString(String string) {
         return string != null && string.length() != 0;
     }
@@ -350,6 +365,8 @@ public class RoomActivity extends AppCompatActivity {
             statusTextView.setText("Not Ready");
         } else if (room.getStatus() == Room.READY) {
             statusTextView.setText("Ready");
+        } else if (room.getStatus() == Room.PLAYING) {
+            startGame();
         } else {
             throw new IllegalStateException();
         }
