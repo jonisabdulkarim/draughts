@@ -17,9 +17,10 @@ import jak.draughts.TileColor;
  */
 public abstract class Game {
 
-    public static Game chooseGameMode(char mode) {
+    public static Game chooseGameMode(String mode) {
         switch(mode) {
-            case 'D':
+            case "GAYP":
+            case "3MOVE":
                 Game game = new DraughtsGame();
 
                 return game;

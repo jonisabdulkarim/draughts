@@ -20,7 +20,8 @@ import jak.draughts.main.MainMenuActivity;
 public class GameActivity extends AppCompatActivity {
 
     // Debug variables
-    char mode;
+    // char mode;
+    String mode;
     String TAG;
 
     // Firebase variables
@@ -28,7 +29,6 @@ public class GameActivity extends AppCompatActivity {
 
     // RecycleView variables
     RecyclerView recyclerView;
-    //RecyclerView.Adapter adapter;
     GameAdapter adapter;
     RecyclerView.LayoutManager layoutManager;
 
@@ -42,7 +42,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_board);
 
         Intent intent = getIntent();
-        mode = intent.getCharExtra(MainMenuActivity.EXTRA_CHAR, 'X'); // todo: change
+        // mode = intent.getCharExtra("ROOM_ID", 'X'); // todo: change
+        String roomId = intent.getStringExtra("ROOM_ID");
         TAG = this.getClass().getName();
 
         createBoard();
@@ -57,7 +58,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void createBoard() {
-        game = Game.chooseGameMode('D');
+        game = Game.chooseGameMode("GAYP");
     }
 
     private void createView() {
