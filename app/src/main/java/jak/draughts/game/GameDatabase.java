@@ -64,8 +64,14 @@ public class GameDatabase {
                                 @Nullable FirebaseFirestoreException e) {
                 if (e != null) {
                     Log.w(TAG, "Listen failed for listenForChanges()", e);
-                } else if (documentSnapshot != null && documentSnapshot.exists()) {
-                    Log.d(TAG, "Current data: " + documentSnapshot.getData());
+                    return;
+                }
+                String source = documentSnapshot != null
+                        && documentSnapshot.getMetadata().hasPendingWrites()
+                        ? "Local" : "Server";
+
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    Log.d(TAG, "Source: " + source + ", Current data: " + documentSnapshot.getData());
 
                     Room room = documentSnapshot.toObject(Room.class);
 
@@ -76,5 +82,9 @@ public class GameDatabase {
                 }
             }
         });
+    }
+
+    public void setRoom(Room room) {
+        database.collection("rooms").document(room.getRoomId()).set(room);
     }
 }

@@ -20,6 +20,7 @@ public abstract class Game {
 
     protected Room room;
     protected GameDatabase database;
+    protected GameAdapter adapter;
 
     public static Game chooseGameMode(String mode, String roomId, int turn) {
         switch(mode) {
@@ -45,6 +46,14 @@ public abstract class Game {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public GameAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void setAdapter(GameAdapter adapter) {
+        this.adapter = adapter;
     }
 
     public abstract List<Integer> getDataSet();

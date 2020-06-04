@@ -1,5 +1,7 @@
 package jak.draughts.game.gameobjects;
 
+import android.util.Log;
+
 import androidx.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
@@ -20,7 +22,7 @@ public class DraughtBoard extends Board {
 
     public DraughtBoard() {
         createBoard();
-        createDataSet();
+        writeDataSet();
     }
 
     private void createBoard() {
@@ -60,7 +62,7 @@ public class DraughtBoard extends Board {
     }
 
     @Override
-    public void createDataSet() {
+    public void writeDataSet() {
         List<Integer> dataSet = new ArrayList<>(COLUMNS * ROWS);
         List<TileColor> backgroundSet = new ArrayList<>(COLUMNS * ROWS);
 
@@ -73,6 +75,45 @@ public class DraughtBoard extends Board {
 
         setDataSet(dataSet);
         setBackgroundSet(backgroundSet);
+    }
+
+    @Override
+    public void readDataSet(List<Integer> dataSet) {
+        Log.d("BOARD", "BOARD IS READ.");
+
+        List<DraughtPiece> removedPieces = new ArrayList<>();
+
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLUMNS; j++) {
+                int newVal = dataSet.get((i*8)+j);
+                int oldVal = getDataSet().get((i*8)+j);
+                Coordinates coords = new Coordinates(i, j);
+
+                if (oldVal != newVal) {
+                    if (newVal == 0) {
+                        DraughtPiece piece = getPiece(coords);
+                        removedPieces.add(piece);
+                        remove(piece);
+                    } else if (newVal == 1) {
+                        for (DraughtPiece piece : removedPieces) {
+                            if (piece.isRed()) {
+                                put(piece, coords);
+                                break;
+                            }
+                        }
+                    } else if (newVal == 3) {
+                        for (DraughtPiece piece : removedPieces) {
+                            if (piece.isRed()) {
+                                put(piece, coords);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        setDataSet(dataSet);
     }
 
     /**

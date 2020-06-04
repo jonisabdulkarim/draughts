@@ -28,6 +28,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.MyViewHolder> 
     public GameAdapter(Context context, Game game) {
         this.context = context;
         this.game = game;
+        this.game.setAdapter(this);
 
         this.dataSet = new ArrayList<>();
         this.backgroundSet = new ArrayList<>();
@@ -116,7 +117,7 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.MyViewHolder> 
                 + position + " tile no: " + textView.getText());
 
         game.resolveClick(new Coordinates(position));
-        update();
+        // update();
     }
 
     public void update() {

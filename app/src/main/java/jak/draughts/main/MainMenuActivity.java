@@ -30,5 +30,6 @@ public class MainMenuActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LobbyActivity.class);
         // intent.putExtra(EXTRA_CHAR, 'D');
         startActivity(intent);
+        finish();
     }
 }

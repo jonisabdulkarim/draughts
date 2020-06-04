@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import jak.draughts.R;
 import jak.draughts.Room;
@@ -55,6 +56,8 @@ public class RoomActivity extends AppCompatActivity {
     Button inviteButton;
 
     FirebaseFirestore db;
+    ListenerRegistration localRoomListener;
+    ListenerRegistration localUserListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +118,9 @@ public class RoomActivity extends AppCompatActivity {
         intent.putExtra("GAME_MODE", room.getGameMode());
         intent.putExtra("TURN", turnValue());
         startActivity(intent);
+        localRoomListener.remove();
+        localUserListener.remove();
+        finish();
     }
 
     private int turnValue() {
@@ -441,7 +447,7 @@ public class RoomActivity extends AppCompatActivity {
     public void updateLocalUser(final char userType, final User user) {
         final DocumentReference docRef = db.collection("users")
                 .document(user.getId());
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        localUserListener = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
                                 @Nullable FirebaseFirestoreException e) {
@@ -487,10 +493,12 @@ public class RoomActivity extends AppCompatActivity {
     public void updateLocalRoom() {
         final DocumentReference docRef = db.collection("rooms")
                 .document(room.getRoomId());
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        localRoomListener = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
                                 @Nullable FirebaseFirestoreException e) {
+                Log.w(TAG, "UPDATELOCALROOM() CHANGES");
+
                 if (e != null) {
                     Log.w(TAG, "Listen failed for updateLocalRoom()", e);
                 } else if (documentSnapshot != null && documentSnapshot.exists()) {
@@ -507,6 +515,7 @@ public class RoomActivity extends AppCompatActivity {
                 } else {
                     Log.d(TAG, "Current data: null");
                 }
+
             }
         });
     }

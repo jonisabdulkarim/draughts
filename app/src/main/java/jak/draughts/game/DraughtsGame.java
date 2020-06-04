@@ -1,9 +1,10 @@
 package jak.draughts.game;
 
+import android.util.Log;
+
 import java.util.List;
 
 import jak.draughts.Coordinates;
-import jak.draughts.Room;
 import jak.draughts.TileColor;
 import jak.draughts.game.gameobjects.DraughtBoard;
 import jak.draughts.game.gameobjects.DraughtPiece;
@@ -16,6 +17,8 @@ import jak.draughts.game.gameobjects.DraughtTile;
  */
 public class DraughtsGame extends Game {
 
+    private String TAG;
+
     private DraughtBoard board;
     private DraughtPiece selectedPiece;
 
@@ -25,11 +28,13 @@ public class DraughtsGame extends Game {
     private boolean mustCapture; // true if player can/must capture
 
     DraughtsGame(String roomId, int turn) {
+        Log.d("GAME", "GAME IS STARTED.");
+        TAG = getClass().getName();
+
         initialiseDatabase(roomId);
         board = new DraughtBoard();
 
         this.turn = turn;
-        this.isMyTurn = this.isRed = false; // todo: change
 
         mustCapture = false;
         selectedPiece = null;
@@ -47,14 +52,37 @@ public class DraughtsGame extends Game {
 
     @Override
     public void updateBoard() {
+        Log.d("GAME", "BOARD IS UPDATED.");
         if (room.getTurn() == this.turn) {
-            // my turn
-        } else {
-            // not my turn - ignore update
+            isMyTurn = true;
         }
+
+        Log.d(TAG, "Room turn: " + room.getTurn() + ", game turn: " + turn
+            + ", isMyTurn = " + isMyTurn + ".");
+        logBoard();
+
+        // all cases - update board
+    }
+
+    private void logBoard() {
+        List<Integer> board = getDataSet();
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 8; i++) {
+            sb.append("[");
+            for (int j = 0; j < 8; j++) {
+                sb.append(board.get((i*8)+j));
+                if (j != 7)
+                    sb.append(", ");
+                else
+                    sb.append("]");
+            }
+            sb.append("\n");
+        }
+        Log.d("BOARD", "\n" + sb.toString());
     }
 
     public void setFirstTurn() {
+        Log.d("GAME", "FIRST TURN IS SET.");
         if (room.getTurn() == this.turn) {
             isRed = true;
             isMyTurn = true;
@@ -81,6 +109,7 @@ public class DraughtsGame extends Game {
         }
         // TODO: endTurn
         // endTurn();
+        adapter.update();
     }
 
     private void makeMove(Coordinates coords) {
@@ -90,15 +119,18 @@ public class DraughtsGame extends Game {
                 // TODO: capturing moves
             case SELECTED:
                 board.move(selectedPiece, coords);
+                deSelect();
+                endTurn();
+                break;
             default:
-                deSelect(); // must be run in all cases
+                deSelect();
         }
     }
 
     private void deSelect() {
         selectedPiece = null;
         board.deselect();
-        board.createDataSet();
+        board.writeDataSet();
     }
 
     private boolean hasSelectedPiece() {
@@ -113,7 +145,7 @@ public class DraughtsGame extends Game {
                 if (!canAnyCapture()) { // TODO
                     if (canMove(piece)) {
                         selectedPiece = piece;
-                        board.createDataSet();
+                        board.writeDataSet();
 
                     }
                 }
@@ -172,8 +204,11 @@ public class DraughtsGame extends Game {
 
     @Override
     public void endTurn() {
-        board.createDataSet();
+        Log.d("GAME", "TURN IS ENDED.");
         isMyTurn = false;
+        room.setTurn(room.getTurn() == 0 ? 1 : 0);
+        room.setDataSet(board.getDataSet());
+        database.setRoom(room);
     }
 
     @Override

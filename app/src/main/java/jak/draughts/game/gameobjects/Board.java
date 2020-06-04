@@ -22,7 +22,9 @@ public abstract class Board {
      * The adapter and database must run this method before attempting to get the
      * dataSet or the backgroundSet, or else the data may be outdated.
      */
-    public abstract void createDataSet();
+    public abstract void writeDataSet();
+
+    public abstract void readDataSet(List<Integer> dataSet);
 
     public List<Integer> getDataSet() {
         return dataSet;

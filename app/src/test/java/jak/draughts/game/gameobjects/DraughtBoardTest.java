@@ -99,7 +99,7 @@ public class DraughtBoardTest {
         assertEquals(0,
                 board.getDataSet().get(redManPieceCoords.getPosition()).intValue());
 
-        board.createDataSet();
+        board.writeDataSet();
 
         assertNotEquals(board.getDataSet(), starterBoard);
         assertEquals(1,
@@ -183,7 +183,7 @@ public class DraughtBoardTest {
         assertEquals(starterBoardBackground, board.getBackgroundSet());
         Coordinates coords = new Coordinates(0);
         board.selectTile(coords, SELECTED);
-        board.createDataSet();
+        board.writeDataSet();
         assertNotEquals(starterBoardBackground, board.getBackgroundSet());
     }
 

@@ -137,6 +137,7 @@ public class LobbyActivity extends AppCompatActivity {
             intent.putExtra("isCreator", false);
 
             startActivity(intent);
+            finish();
         } else {
             // TODO: popup: "cannot join non-vacant room"
 
@@ -162,5 +163,6 @@ public class LobbyActivity extends AppCompatActivity {
         intent.putExtra("isCreator", true);
 
         startActivity(intent);
+        finish();
     }
 }
