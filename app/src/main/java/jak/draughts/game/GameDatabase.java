@@ -42,7 +42,7 @@ public class GameDatabase {
                     assert doc != null && doc.exists();
                     Room room = doc.toObject(Room.class);
 
-                    // todo: return room object with setter
+                    game.setRoom(room);
                 }
             }
         });
@@ -68,7 +68,8 @@ public class GameDatabase {
 
                     Room room = documentSnapshot.toObject(Room.class);
 
-                    // todo: return room object with setter
+                    game.setRoom(room);
+                    game.updateBoard();
                 } else {
                     Log.d(TAG, "Current data: null");
                 }

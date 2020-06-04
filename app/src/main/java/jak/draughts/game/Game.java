@@ -3,6 +3,7 @@ package jak.draughts.game;
 import java.util.List;
 
 import jak.draughts.Coordinates;
+import jak.draughts.Room;
 import jak.draughts.TileColor;
 
 /**
@@ -17,11 +18,14 @@ import jak.draughts.TileColor;
  */
 public abstract class Game {
 
-    public static Game chooseGameMode(String mode) {
+    protected Room room;
+    protected GameDatabase database;
+
+    public static Game chooseGameMode(String mode, String roomId) {
         switch(mode) {
             case "GAYP":
             case "3MOVE":
-                Game game = new DraughtsGame();
+                Game game = new DraughtsGame(roomId);
 
                 return game;
             default:
@@ -29,20 +33,31 @@ public abstract class Game {
         }
     }
 
+    public void initialiseDatabase(String roomId) {
+        database = new GameDatabase(this);
+        database.getRoom(roomId);
+        database.listenForChanges(roomId);
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
+    }
+
     public abstract List<Integer> getDataSet();
 
     public abstract List<TileColor> getBackgroundSet();
 
     /**
-     * Method called by the database that informs the game of any
-     * changes made in the opponent's board. Must include the coords
-     * of the piece that was moved during a turn to ensure objects are
-     * correctly removed.
-     *
-     * @param dataSet the updated board in a 1D list
-     * @param movedPieceCoords old position of the piece that was moved
+     * Method called by the database that informs the game of new
+     * changes made in the room. The method will examine the room's
+     * contents, including the board, to see if there are any
+     * significant changes, i.e. a change in turn.
      */
-    public abstract void updateBoard(List<Integer> dataSet, Coordinates movedPieceCoords);
+    public abstract void updateBoard();
 
     /**
      * Method called by the adapter informing the game that a

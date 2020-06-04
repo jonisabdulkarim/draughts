@@ -22,14 +22,11 @@ public class DraughtsGame extends Game {
     private boolean isRed; // true if player controls red pieces
     private boolean mustCapture; // true if player can/must capture
 
-    DraughtsGame() {
-        this(true);
-    }
-
-    DraughtsGame(boolean isRed) {
+    DraughtsGame(String roomId) {
+        initialiseDatabase(roomId);
         board = new DraughtBoard();
 
-        this.isMyTurn = this.isRed = isRed;
+        this.isMyTurn = this.isRed = false; // todo: change
 
         mustCapture = false;
         selectedPiece = null;
@@ -46,7 +43,7 @@ public class DraughtsGame extends Game {
     }
 
     @Override
-    public void updateBoard(List<Integer> dataSet, Coordinates movedPieceCoords) {
+    public void updateBoard() {
 
     }
 
