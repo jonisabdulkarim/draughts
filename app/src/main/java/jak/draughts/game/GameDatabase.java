@@ -43,6 +43,7 @@ public class GameDatabase {
                     Room room = doc.toObject(Room.class);
 
                     game.setRoom(room);
+                    game.setFirstTurn();
                 }
             }
         });

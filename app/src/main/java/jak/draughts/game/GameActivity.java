@@ -20,8 +20,6 @@ import jak.draughts.main.MainMenuActivity;
 public class GameActivity extends AppCompatActivity {
 
     // Debug variables
-    // char mode;
-    String mode;
     String TAG;
 
     // Firebase variables
@@ -40,13 +38,14 @@ public class GameActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board);
-
-        Intent intent = getIntent();
-        // mode = intent.getCharExtra("ROOM_ID", 'X'); // todo: change
-        String roomId = intent.getStringExtra("ROOM_ID");
         TAG = this.getClass().getName();
 
-        createBoard();
+        Intent intent = getIntent();
+        String roomId = intent.getStringExtra("ROOM_ID");
+        String mode = intent.getStringExtra("GAME_MODE");
+        int turn = intent.getIntExtra("TURN", 0);
+
+        createBoard(mode, roomId, turn);
         createView();
 
         initialiseFirebase(); // TODO: check
@@ -57,8 +56,8 @@ public class GameActivity extends AppCompatActivity {
         database = FirebaseFirestore.getInstance();
     }
 
-    private void createBoard() {
-        game = Game.chooseGameMode("GAYP");
+    private void createBoard(String mode, String roomId, int turn) {
+        game = Game.chooseGameMode(mode, roomId, turn);
     }
 
     private void createView() {

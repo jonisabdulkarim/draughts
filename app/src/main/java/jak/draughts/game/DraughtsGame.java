@@ -3,6 +3,7 @@ package jak.draughts.game;
 import java.util.List;
 
 import jak.draughts.Coordinates;
+import jak.draughts.Room;
 import jak.draughts.TileColor;
 import jak.draughts.game.gameobjects.DraughtBoard;
 import jak.draughts.game.gameobjects.DraughtPiece;
@@ -18,14 +19,16 @@ public class DraughtsGame extends Game {
     private DraughtBoard board;
     private DraughtPiece selectedPiece;
 
+    private int turn;
     private boolean isMyTurn; // true if it's player's turn
     private boolean isRed; // true if player controls red pieces
     private boolean mustCapture; // true if player can/must capture
 
-    DraughtsGame(String roomId) {
+    DraughtsGame(String roomId, int turn) {
         initialiseDatabase(roomId);
         board = new DraughtBoard();
 
+        this.turn = turn;
         this.isMyTurn = this.isRed = false; // todo: change
 
         mustCapture = false;
@@ -44,7 +47,21 @@ public class DraughtsGame extends Game {
 
     @Override
     public void updateBoard() {
+        if (room.getTurn() == this.turn) {
+            // my turn
+        } else {
+            // not my turn - ignore update
+        }
+    }
 
+    public void setFirstTurn() {
+        if (room.getTurn() == this.turn) {
+            isRed = true;
+            isMyTurn = true;
+        } else {
+            isRed = false;
+            isMyTurn = false;
+        }
     }
 
     @Override

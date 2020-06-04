@@ -21,11 +21,11 @@ public abstract class Game {
     protected Room room;
     protected GameDatabase database;
 
-    public static Game chooseGameMode(String mode, String roomId) {
+    public static Game chooseGameMode(String mode, String roomId, int turn) {
         switch(mode) {
             case "GAYP":
             case "3MOVE":
-                Game game = new DraughtsGame(roomId);
+                Game game = new DraughtsGame(roomId, turn);
 
                 return game;
             default:
@@ -50,6 +50,12 @@ public abstract class Game {
     public abstract List<Integer> getDataSet();
 
     public abstract List<TileColor> getBackgroundSet();
+
+    /**
+     * Determines first turn from this room. Called by the database
+     * once the room object has been set.
+     */
+    public abstract void setFirstTurn();
 
     /**
      * Method called by the database that informs the game of new

@@ -112,7 +112,17 @@ public class RoomActivity extends AppCompatActivity {
     private void startGame() {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra("ROOM_ID", room.getRoomId());
+        intent.putExtra("GAME_MODE", room.getGameMode());
+        intent.putExtra("TURN", turnValue());
         startActivity(intent);
+    }
+
+    private int turnValue() {
+        if (isCreator) {
+            return Room.HOST;
+        } else {
+            return Room.JOIN;
+        }
     }
 
 
