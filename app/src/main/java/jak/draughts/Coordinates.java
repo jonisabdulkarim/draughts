@@ -162,4 +162,17 @@ public class Coordinates {
     public Coordinates moveDownRight(int spaces) {
         return new Coordinates(getX() + spaces, getY() + spaces);
     }
+
+    /**
+     * Returns the coordinate at the mid-point of this and the
+     * given coordinate.
+     *
+     * @param other the other coordinate
+     * @return middle of two coordinates
+     */
+    public Coordinates middle(Coordinates other) {
+        int x = getX() + other.getX();
+        int y = getY() + other.getY();
+        return new Coordinates(x/2, y/2);
+    }
 }

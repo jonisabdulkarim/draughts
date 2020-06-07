@@ -129,7 +129,10 @@ public class DraughtsGame extends Game {
         DraughtTile tile = board.getTile(coords);
         switch (tile.getTileColor()) {
             case CAPTURE_SELECT:
-                // TODO: capturing moves
+                lastMovedPieceCoords = board.capture(selectedPiece, coords);
+                deSelect();
+                endTurn(); // TODO: multiple captures
+                break;
             case SELECTED:
                 lastMovedPieceCoords = board.move(selectedPiece, coords);
                 deSelect();
@@ -155,11 +158,15 @@ public class DraughtsGame extends Game {
             DraughtPiece piece = board.getPiece(coords);
 
             if (isRed == piece.isRed()) { // same team
-                if (!canAnyCapture()) { // TODO
+                if (!canAnyCapture()) { // any piece can capture
                     if (canMove(piece)) {
                         selectedPiece = piece;
                         board.writeDataSet();
-
+                    }
+                } else {
+                    if (canCapture(piece, true)) { // this piece can capture
+                        selectedPiece = piece;
+                        board.writeDataSet();
                     }
                 }
             }
@@ -167,7 +174,61 @@ public class DraughtsGame extends Game {
     }
 
     private boolean canAnyCapture() {
-        return false;
+        mustCapture = false;
+        List<DraughtPiece> teamPieces = board.getTeamPieces(isRed);
+        for (DraughtPiece piece : teamPieces) {
+            if (canCapture(piece, false)) {
+                mustCapture = true;
+            }
+        }
+        return mustCapture;
+    }
+
+    private boolean canCapture(DraughtPiece piece, boolean alsoSelect) {
+        boolean canCaptureResult = false;
+
+        if (piece.isRed() || piece.isKing()) {
+            // down-left
+            Coordinates removeCoords = piece.getCoordinates().moveDownLeft(1);
+            Coordinates putCoords = piece.getCoordinates().moveDownLeft(2);
+            canCaptureResult = canCapture(removeCoords, putCoords, alsoSelect);
+
+            // down-right
+            removeCoords = piece.getCoordinates().moveDownRight(1);
+            putCoords = piece.getCoordinates().moveDownRight(2);
+            canCaptureResult = canCaptureResult || canCapture(removeCoords, putCoords, alsoSelect);
+        }
+
+        if (!piece.isRed() || piece.isKing()) {
+            // up-left
+            Coordinates removeCoords = piece.getCoordinates().moveUpLeft(1);
+            Coordinates putCoords = piece.getCoordinates().moveUpLeft(2);
+            canCaptureResult = canCaptureResult || canCapture(removeCoords, putCoords, alsoSelect);
+
+            // up-right
+            removeCoords = piece.getCoordinates().moveUpRight(1);
+            putCoords = piece.getCoordinates().moveUpRight(2);
+            canCaptureResult = canCaptureResult || canCapture(removeCoords, putCoords, alsoSelect);
+        }
+
+        return canCaptureResult;
+    }
+
+    private boolean canCapture(Coordinates removeCoords, Coordinates putCoords, boolean alsoSelect) {
+        if (board.inRange(putCoords) && board.isEmpty(putCoords)
+                && !board.isEmpty(removeCoords)
+                && board.getPiece(removeCoords).isRed() != isRed) {
+            if (alsoSelect) {
+                captureSelect(putCoords);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void captureSelect(Coordinates putCoords) {
+        board.selectTile(putCoords, TileColor.CAPTURE_SELECT);
     }
 
     /**

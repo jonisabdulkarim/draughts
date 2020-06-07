@@ -14,10 +14,11 @@ public class DraughtsGameTest {
 
     private Game game;
     private Coordinates redManOccupiedCoords = new Coordinates(2, 1);
+    private String roomId;
 
     @Before
     public void setUp() {
-        game = Game.chooseGameMode('D');
+        game = Game.chooseGameMode("GAYP", roomId, 0);
     }
 
     @Test
@@ -26,12 +27,12 @@ public class DraughtsGameTest {
         assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
             @Override
             public void run() {
-                Game.chooseGameMode('X');
+                Game.chooseGameMode("GAYP", roomId, -1);
             }
         });
 
         // create draught's game
-        game = Game.chooseGameMode('D');
+        game = Game.chooseGameMode("GAYP", roomId, 0);
         assertTrue(game instanceof DraughtsGame);
     }
 

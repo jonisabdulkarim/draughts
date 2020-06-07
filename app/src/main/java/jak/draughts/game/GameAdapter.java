@@ -79,6 +79,8 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.MyViewHolder> 
                 return new ColorDrawable(context.getColor(R.color.colorBoardBuff));
             case SELECTED:
                 return new ColorDrawable(context.getColor(R.color.colorBoardSelected));
+            case CAPTURE_SELECT:
+                return new ColorDrawable(context.getColor(R.color.colorBoardCaptureSelect));
             default:
                 throw new IllegalStateException("Illegal tile background");
         }

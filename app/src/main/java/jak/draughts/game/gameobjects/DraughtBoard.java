@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import jak.draughts.Coordinates;
@@ -110,19 +111,27 @@ public class DraughtBoard extends Board {
         getTile(coords).setTileColor(tileColor);
     }
 
+    public Coordinates capture(DraughtPiece piece, Coordinates newCoords) {
+        Coordinates oldCoords = piece.getCoordinates();
+        remove(newCoords.middle(oldCoords));
+        move(piece, newCoords);
+        return oldCoords;
+    }
+
     /**
      * Convenience method that removes the piece from its old location and puts it
-     * in the new location
+     * in the new location. Returns the coordinates it was moved from.
      *
      * @param piece     the piece to be moved
      * @param newCoords location of the tile to be moved to
      * @throws IllegalStateException if tile already contains a piece
+     * @return Coordinates last position of the tile
      */
     public Coordinates move(DraughtPiece piece, Coordinates newCoords) {
-        Coordinates coords = piece.getCoordinates();
+        Coordinates oldCoords = piece.getCoordinates();
         remove(piece);
         put(piece, newCoords);
-        return coords;
+        return oldCoords;
     }
 
     /**
@@ -240,6 +249,28 @@ public class DraughtBoard extends Board {
      */
     public DraughtTile getTile(Coordinates coordinates) {
         return board.get(coordinates.getX()).get(coordinates.getY());
+    }
+
+    public List<DraughtPiece> getTeamPieces(boolean isRed) {
+        List<DraughtPiece> pieces = new LinkedList<>();
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
+                DraughtPiece piece = getTeamPieces(isRed, new Coordinates(row, col));
+                if (piece != null) {
+                    pieces.add(piece);
+                }
+            }
+        }
+        return pieces;
+    }
+
+    private DraughtPiece getTeamPieces(boolean isRed, Coordinates coords) {
+        DraughtPiece piece = getPiece(coords);
+        if (piece != null && piece.isRed() == isRed) {
+            return piece;
+        } else {
+            return null;
+        }
     }
 
     @VisibleForTesting
