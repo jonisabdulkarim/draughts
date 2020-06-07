@@ -17,6 +17,8 @@ public class Coordinates {
     private int x;
     private int y;
 
+    public Coordinates() {} // used in db
+
     /**
      * Creates a Coordinates object according to the index of a tile in a 1D array.
      *

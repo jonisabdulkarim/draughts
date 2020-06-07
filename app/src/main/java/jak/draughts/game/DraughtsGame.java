@@ -21,6 +21,7 @@ public class DraughtsGame extends Game {
 
     private DraughtBoard board;
     private DraughtPiece selectedPiece;
+    private Coordinates lastMovedPieceCoords;
 
     private int turn;
     private boolean isMyTurn; // true if it's player's turn
@@ -59,17 +60,25 @@ public class DraughtsGame extends Game {
         }
 
         List<Integer> roomDataSet = room.getDataSet();
+        lastMovedPieceCoords = room.getMovedPiece();
         if (roomDataSet != null) {
-            board.readDataSet(roomDataSet);
+            board.readDataSet(roomDataSet, lastMovedPieceCoords);
             adapter.update();
             logBoard(roomDataSet);
         }
     }
 
+
+    /**
+     * Debugging method that displays the board according to the database.
+     * Also displays who's turn it is, what turn the player can move in, and
+     * whether it is currently their turn or not.
+     *
+     * @param roomDataSet integer list representing the board
+     */
     private void logBoard(List<Integer> roomDataSet) {
         Log.d(TAG, "Room turn: " + room.getTurn() + ", game turn: " + turn
                 + ", isMyTurn = " + isMyTurn + ".");
-        roomDataSet = getDataSet();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             sb.append("[");
@@ -122,7 +131,7 @@ public class DraughtsGame extends Game {
             case CAPTURE_SELECT:
                 // TODO: capturing moves
             case SELECTED:
-                board.move(selectedPiece, coords);
+                lastMovedPieceCoords = board.move(selectedPiece, coords);
                 deSelect();
                 endTurn();
                 break;
@@ -212,6 +221,7 @@ public class DraughtsGame extends Game {
         isMyTurn = false;
         room.setTurn(room.getTurn() == 0 ? 1 : 0);
         room.setDataSet(board.getDataSet());
+        room.setMovedPiece(lastMovedPieceCoords);
         database.setRoom(room);
     }
 

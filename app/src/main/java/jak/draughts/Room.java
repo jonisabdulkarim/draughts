@@ -81,4 +81,12 @@ public class Room {
     public void setTurn(int turn) {
         this.turn = turn;
     }
+
+    public Coordinates getMovedPiece() {
+        return movedPiece;
+    }
+
+    public void setMovedPiece(Coordinates movedPiece) {
+        this.movedPiece = movedPiece;
+    }
 }

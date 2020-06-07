@@ -2,6 +2,7 @@ package jak.draughts.game.gameobjects;
 
 import java.util.List;
 
+import jak.draughts.Coordinates;
 import jak.draughts.TileColor;
 
 /**
@@ -24,7 +25,7 @@ public abstract class Board {
      */
     public abstract void writeDataSet();
 
-    public abstract void readDataSet(List<Integer> dataSet);
+    public abstract void readDataSet(List<Integer> dataSet, Coordinates movedPieceCoords);
 
     public List<Integer> getDataSet() {
         return dataSet;

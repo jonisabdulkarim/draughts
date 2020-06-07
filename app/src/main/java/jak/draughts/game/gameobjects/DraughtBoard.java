@@ -78,36 +78,20 @@ public class DraughtBoard extends Board {
     }
 
     @Override
-    public void readDataSet(List<Integer> dataSet) {
-        Log.d("BOARD", "BOARD IS READ.");
-        // TODO: code and test
-        List<DraughtPiece> removedPieces = new ArrayList<>();
-
+    public void readDataSet(List<Integer> dataSet, Coordinates movedPieceCoords) {
+        // TODO: code: upgrades to king, test: all
+        DraughtPiece movedPiece = getPiece(movedPieceCoords);
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
-                int newVal = dataSet.get((i*8)+j);
-                int oldVal = getDataSet().get((i*8)+j);
                 Coordinates coords = new Coordinates(i, j);
+                int newType = dataSet.get(coords.getPosition());
+                int currentType = getTile(coords).getType();
 
-                if (oldVal != newVal) {
-                    if (newVal == 0) {
-                        DraughtPiece piece = getPiece(coords);
-                        removedPieces.add(piece);
-                        remove(piece);
-                    } else if (newVal == 1) {
-                        for (DraughtPiece piece : removedPieces) {
-                            if (piece.isRed()) {
-                                put(piece, coords);
-                                break;
-                            }
-                        }
-                    } else if (newVal == 3) {
-                        for (DraughtPiece piece : removedPieces) {
-                            if (piece.isRed()) {
-                                put(piece, coords);
-                                break;
-                            }
-                        }
+                if (currentType != newType) {
+                    if (newType == 0) {
+                        remove(coords);
+                    } else {
+                        put(movedPiece, coords);
                     }
                 }
             }
@@ -134,9 +118,11 @@ public class DraughtBoard extends Board {
      * @param newCoords location of the tile to be moved to
      * @throws IllegalStateException if tile already contains a piece
      */
-    public void move(DraughtPiece piece, Coordinates newCoords) {
+    public Coordinates move(DraughtPiece piece, Coordinates newCoords) {
+        Coordinates coords = piece.getCoordinates();
         remove(piece);
         put(piece, newCoords);
+        return coords;
     }
 
     /**
