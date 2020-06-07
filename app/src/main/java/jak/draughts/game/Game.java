@@ -96,4 +96,12 @@ public abstract class Game {
      * true for both players.
      */
     public abstract boolean gameOver();
+
+    /**
+     * Cleans up resources before activity shutdown. Includes detaching
+     * real-time listeners from the database.
+     */
+    public void stopGame() {
+        database.detachListeners();
+    }
 }

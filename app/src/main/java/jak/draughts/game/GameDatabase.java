@@ -12,6 +12,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import jak.draughts.Room;
 
@@ -20,6 +21,7 @@ public class GameDatabase {
     Game game;
     String TAG;
     FirebaseFirestore database;
+    ListenerRegistration roomListener;
 
     GameDatabase(Game game) {
         TAG = Room.class.getName();
@@ -58,7 +60,7 @@ public class GameDatabase {
     public void listenForChanges(String roomId) {
         final DocumentReference docRef = database.collection("rooms")
                 .document(roomId);
-        docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
+        roomListener = docRef.addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot documentSnapshot,
                                 @Nullable FirebaseFirestoreException e) {
@@ -86,5 +88,9 @@ public class GameDatabase {
 
     public void setRoom(Room room) {
         database.collection("rooms").document(room.getRoomId()).set(room);
+    }
+
+    public void detachListeners() {
+        roomListener.remove();
     }
 }

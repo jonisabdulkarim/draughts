@@ -28,8 +28,8 @@ public class DraughtsGame extends Game {
     private boolean mustCapture; // true if player can/must capture
 
     DraughtsGame(String roomId, int turn) {
-        Log.d("GAME", "GAME IS STARTED.");
         TAG = getClass().getName();
+        Log.d(TAG, "GAME IS STARTED.");
 
         initialiseDatabase(roomId);
         board = new DraughtBoard();
@@ -52,25 +52,29 @@ public class DraughtsGame extends Game {
 
     @Override
     public void updateBoard() {
-        Log.d("GAME", "BOARD IS UPDATED.");
+        Log.d(TAG, "BOARD IS UPDATED.");
+
         if (room.getTurn() == this.turn) {
             isMyTurn = true;
         }
 
-        Log.d(TAG, "Room turn: " + room.getTurn() + ", game turn: " + turn
-            + ", isMyTurn = " + isMyTurn + ".");
-        logBoard();
-
-        // all cases - update board
+        List<Integer> roomDataSet = room.getDataSet();
+        if (roomDataSet != null) {
+            board.readDataSet(roomDataSet);
+            adapter.update();
+            logBoard(roomDataSet);
+        }
     }
 
-    private void logBoard() {
-        List<Integer> board = getDataSet();
+    private void logBoard(List<Integer> roomDataSet) {
+        Log.d(TAG, "Room turn: " + room.getTurn() + ", game turn: " + turn
+                + ", isMyTurn = " + isMyTurn + ".");
+        roomDataSet = getDataSet();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 8; i++) {
             sb.append("[");
             for (int j = 0; j < 8; j++) {
-                sb.append(board.get((i*8)+j));
+                sb.append(roomDataSet.get((i*8)+j));
                 if (j != 7)
                     sb.append(", ");
                 else
@@ -82,7 +86,7 @@ public class DraughtsGame extends Game {
     }
 
     public void setFirstTurn() {
-        Log.d("GAME", "FIRST TURN IS SET.");
+        Log.d(TAG, "FIRST TURN IS SET.");
         if (room.getTurn() == this.turn) {
             isRed = true;
             isMyTurn = true;
@@ -204,7 +208,7 @@ public class DraughtsGame extends Game {
 
     @Override
     public void endTurn() {
-        Log.d("GAME", "TURN IS ENDED.");
+        Log.d(TAG, "TURN IS ENDED.");
         isMyTurn = false;
         room.setTurn(room.getTurn() == 0 ? 1 : 0);
         room.setDataSet(board.getDataSet());

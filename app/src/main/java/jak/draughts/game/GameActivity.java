@@ -33,7 +33,6 @@ public class GameActivity extends AppCompatActivity {
 
     // Game variables
     Game game;
-    Room room;
 
     static int start = 0;
 
@@ -56,6 +55,12 @@ public class GameActivity extends AppCompatActivity {
 
         createBoard(mode, roomId, turn);
         createView();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        game.stopGame();
     }
 
     private void createBoard(String mode, String roomId, int turn) {

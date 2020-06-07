@@ -80,7 +80,7 @@ public class DraughtBoard extends Board {
     @Override
     public void readDataSet(List<Integer> dataSet) {
         Log.d("BOARD", "BOARD IS READ.");
-
+        // TODO: code and test
         List<DraughtPiece> removedPieces = new ArrayList<>();
 
         for (int i = 0; i < ROWS; i++) {
