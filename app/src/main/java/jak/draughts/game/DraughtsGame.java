@@ -26,8 +26,6 @@ public class DraughtsGame extends Game {
     private int turn; // turn number
     private boolean isMyTurn; // true if it's player's turn
     private boolean isRed; // true if player controls red pieces
-    private boolean mustCapture; // true if player can/must capture
-    private char lastMove; // {'M', 'C'}
 
     DraughtsGame(String roomId, int turn) {
         TAG = getClass().getName();
@@ -36,9 +34,7 @@ public class DraughtsGame extends Game {
         board = new DraughtBoard();
 
         this.turn = turn;
-
-        mustCapture = false;
-        selectedPiece = null;
+        this.selectedPiece = null;
     }
 
 
@@ -156,7 +152,7 @@ public class DraughtsGame extends Game {
 
             if (isRed == piece.isRed()) { // same team
                 if (!canAnyCapture()) { // any piece can capture
-                    if (canMove(piece)) {
+                    if (canMove(piece, true)) {
                         selectedPiece = piece;
                         board.writeDataSet();
                     }
@@ -177,13 +173,13 @@ public class DraughtsGame extends Game {
      * @see DraughtsGame#canCapture(DraughtPiece, boolean)
      */
     private boolean canAnyCapture() {
-        mustCapture = false;
+        boolean mustCapture = false;
         List<DraughtPiece> teamPieces = board.getTeamPieces(isRed);
+
         for (DraughtPiece piece : teamPieces) {
-            if (canCapture(piece, false)) {
-                mustCapture = true;
-            }
+            mustCapture = mustCapture || canCapture(piece, false);
         }
+
         return mustCapture;
     }
 
@@ -198,33 +194,38 @@ public class DraughtsGame extends Game {
      * @see DraughtsGame#canCapture(Coordinates, Coordinates, boolean)
      */
     private boolean canCapture(DraughtPiece piece, boolean alsoSelect) {
-        boolean canCaptureResult = false;
+        boolean result;
+        boolean anyResult = false;
 
         if (piece.isRed() || piece.isKing()) {
             // down-left
             Coordinates removeCoords = piece.getCoordinates().moveDownLeft(1);
             Coordinates putCoords = piece.getCoordinates().moveDownLeft(2);
-            canCaptureResult = canCapture(removeCoords, putCoords, alsoSelect);
+            result = canCapture(removeCoords, putCoords, alsoSelect);
+            anyResult = result;
 
             // down-right
             removeCoords = piece.getCoordinates().moveDownRight(1);
             putCoords = piece.getCoordinates().moveDownRight(2);
-            canCaptureResult = canCaptureResult || canCapture(removeCoords, putCoords, alsoSelect);
+            result = canCapture(removeCoords, putCoords, alsoSelect);
+            anyResult = anyResult || result;
         }
 
         if (!piece.isRed() || piece.isKing()) {
             // up-left
             Coordinates removeCoords = piece.getCoordinates().moveUpLeft(1);
             Coordinates putCoords = piece.getCoordinates().moveUpLeft(2);
-            canCaptureResult = canCaptureResult || canCapture(removeCoords, putCoords, alsoSelect);
+            result = canCapture(removeCoords, putCoords, alsoSelect);
+            anyResult = anyResult || result;
 
             // up-right
             removeCoords = piece.getCoordinates().moveUpRight(1);
             putCoords = piece.getCoordinates().moveUpRight(2);
-            canCaptureResult = canCaptureResult || canCapture(removeCoords, putCoords, alsoSelect);
+            result = canCapture(removeCoords, putCoords, alsoSelect);
+            anyResult = anyResult || result;
         }
 
-        return canCaptureResult;
+        return anyResult;
     }
 
     /**
@@ -264,46 +265,65 @@ public class DraughtsGame extends Game {
      * @param piece the piece to be moved
      * @return true if it can move in at least one direction, false otherwise
      */
-    private boolean canMove(DraughtPiece piece) {
-        boolean canMove = false;
+    private boolean canMove(DraughtPiece piece, boolean alsoSelect) {
+        boolean result;
+        boolean anyResult = false;
 
         if (piece.isRed() || piece.isKing()) {
             // down-left
             Coordinates movedCoords = piece.getCoordinates().moveDownLeft(1);
-            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
-                board.selectTile(movedCoords, TileColor.SELECTED);
-                canMove = true;
-            }
+            result = canMove(movedCoords, alsoSelect);
+            anyResult = result;
 
             // down-right
             movedCoords = piece.getCoordinates().moveDownRight(1);
-            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
-                board.selectTile(movedCoords, TileColor.SELECTED);
-                canMove = true;
-            }
+            result = canMove(movedCoords, alsoSelect);
+            anyResult = anyResult || result;
         }
 
         if (!piece.isRed() || piece.isKing()) {
             // up-left
             Coordinates movedCoords = piece.getCoordinates().moveUpLeft(1);
-            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
-                board.selectTile(movedCoords, TileColor.SELECTED);
-                canMove = true;
-            }
+            result = canMove(movedCoords, alsoSelect);
+            anyResult = anyResult || result;
 
             // up-right
             movedCoords = piece.getCoordinates().moveUpRight(1);
-            if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
-                board.selectTile(movedCoords, TileColor.SELECTED);
-                canMove = true;
-            }
+            result = canMove(movedCoords, alsoSelect);
+            anyResult = anyResult || result;
         }
 
-        return canMove;
+        return anyResult;
     }
 
-    private void canUpgrade() {
+    private boolean canMove(Coordinates movedCoords, boolean alsoSelect) {
+        if (board.inRange(movedCoords) && board.isEmpty(movedCoords)) {
+            if (alsoSelect) {
+                board.selectTile(movedCoords, TileColor.SELECTED);
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    private boolean playerBlocked() {
+        if (canAnyCapture() || canAnyMove()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean canAnyMove() {
+        boolean result = false;
+        List<DraughtPiece> teamPieces = board.getTeamPieces(isRed);
+
+        for (DraughtPiece piece : teamPieces) {
+            result = result || canMove(piece, false);
+        }
+
+        return result;
     }
 
     @Override
@@ -324,7 +344,13 @@ public class DraughtsGame extends Game {
 
     @Override
     public boolean gameOver() {
-        return false;
+        if (playerBlocked()) {
+            room.setStatus(4);
+            endTurn();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
