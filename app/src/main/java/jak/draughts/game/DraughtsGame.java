@@ -12,8 +12,8 @@ import jak.draughts.game.gameobjects.DraughtTile;
 
 /**
  * This class serves as the base class for all draughts game modes.
- * An object of this class will follow the default rules of the game.
- *
+ * An object of this class will follow the default rules of the game,
+ * otherwise known as "Go As You Please" or "GAYP" for short.
  */
 public class DraughtsGame extends Game {
 
@@ -31,7 +31,6 @@ public class DraughtsGame extends Game {
 
     DraughtsGame(String roomId, int turn) {
         TAG = getClass().getName();
-        Log.d(TAG, "GAME IS STARTED.");
 
         initialiseDatabase(roomId);
         board = new DraughtBoard();
@@ -42,20 +41,9 @@ public class DraughtsGame extends Game {
         selectedPiece = null;
     }
 
-    @Override
-    public List<Integer> getDataSet() {
-        return board.getDataSet();
-    }
-
-    @Override
-    public List<TileColor> getBackgroundSet() {
-        return board.getBackgroundSet();
-    }
 
     @Override
     public void updateBoard() {
-        Log.d(TAG, "BOARD IS UPDATED.");
-
         if (room.getTurn() == this.turn) {
             isMyTurn = true;
         }
@@ -81,20 +69,21 @@ public class DraughtsGame extends Game {
         Log.d(TAG, "Room turn: " + room.getTurn() + ", game turn: " + turn
                 + ", isMyTurn = " + isMyTurn + ".");
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 8; i++) {
+        for (int row = 0; row < 8; row++) {
             sb.append("[");
-            for (int j = 0; j < 8; j++) {
-                sb.append(roomDataSet.get((i*8)+j));
-                if (j != 7)
+            for (int col = 0; col < 8; col++) {
+                sb.append(roomDataSet.get(new Coordinates(row, col).getPosition()));
+                if (col != 7)
                     sb.append(", ");
                 else
                     sb.append("]");
             }
             sb.append("\n");
         }
-        Log.d("BOARD", "\n" + sb.toString());
+        Log.d("BOARD", "\n\n" + sb.toString());
     }
 
+    @Override
     public void setFirstTurn() {
         if (room.getTurn() == this.turn) {
             isRed = true;
@@ -113,10 +102,10 @@ public class DraughtsGame extends Game {
             if (!board.isEmpty(clickCoords)) {
                 deSelect();
             } else {
-                makeMove(clickCoords);
+                makeMove(clickCoords); // move/capture if possible
             }
         } else {
-            select(clickCoords);
+            select(clickCoords); // select piece/highlight tiles
         }
 
         adapter.update();
@@ -151,6 +140,7 @@ public class DraughtsGame extends Game {
     }
 
     private void deSelect() {
+        board.upgradeToKing(selectedPiece);
         selectedPiece = null;
         board.deselect();
         board.writeDataSet();
@@ -180,6 +170,12 @@ public class DraughtsGame extends Game {
         }
     }
 
+    /**
+     * Checks if any of this team's pieces can capture.
+     *
+     * @return true if any team piece can capture, false otherwise
+     * @see DraughtsGame#canCapture(DraughtPiece, boolean)
+     */
     private boolean canAnyCapture() {
         mustCapture = false;
         List<DraughtPiece> teamPieces = board.getTeamPieces(isRed);
@@ -191,6 +187,16 @@ public class DraughtsGame extends Game {
         return mustCapture;
     }
 
+    /**
+     * Checks if the given piece can capture in any of the four possible
+     * directions. If alsoSelect is set to true, it will also highlight
+     * the tiles that the given piece can be moved to.
+     *
+     * @param piece      the capturing piece
+     * @param alsoSelect true to highlight tiles, false otherwise
+     * @return true if it can capture in at least one direction, false otherwise
+     * @see DraughtsGame#canCapture(Coordinates, Coordinates, boolean)
+     */
     private boolean canCapture(DraughtPiece piece, boolean alsoSelect) {
         boolean canCaptureResult = false;
 
@@ -221,6 +227,19 @@ public class DraughtsGame extends Game {
         return canCaptureResult;
     }
 
+    /**
+     * Checks if a piece can capture the specified piece. If alsoSelect is
+     * set to true, it will also highlight the tiles.
+     * <p>
+     * While three coordinates are needed to check for captures, only two
+     * are given since the third can be deducted by taking into account
+     * the direction of the move.
+     *
+     * @param removeCoords location of opponent's piece to capture
+     * @param putCoords    destination of player's piece
+     * @param alsoSelect   true to highlight tiles, false otherwise
+     * @return true if it can capture, false otherwise
+     */
     private boolean canCapture(Coordinates removeCoords, Coordinates putCoords, boolean alsoSelect) {
         if (board.inRange(putCoords) && board.isEmpty(putCoords)
                 && !board.isEmpty(removeCoords)
@@ -283,6 +302,10 @@ public class DraughtsGame extends Game {
         return canMove;
     }
 
+    private void canUpgrade() {
+
+    }
+
     @Override
     public void endMove() {
         room.setDataSet(board.getDataSet());
@@ -302,5 +325,15 @@ public class DraughtsGame extends Game {
     @Override
     public boolean gameOver() {
         return false;
+    }
+
+    @Override
+    public List<Integer> getDataSet() {
+        return board.getDataSet();
+    }
+
+    @Override
+    public List<TileColor> getBackgroundSet() {
+        return board.getBackgroundSet();
     }
 }

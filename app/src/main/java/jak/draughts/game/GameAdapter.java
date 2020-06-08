@@ -61,8 +61,14 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.MyViewHolder> 
             case 1:
                 holder.textView.setForeground(context.getDrawable(R.drawable.red_man_disc));
                 break;
+            case 2:
+                holder.textView.setForeground(context.getDrawable(R.drawable.red_king_disc));
+                break;
             case 3:
                 holder.textView.setForeground(context.getDrawable(R.drawable.white_man_disc));
+                break;
+            case 4:
+                holder.textView.setForeground(context.getDrawable(R.drawable.white_king_disc));
                 break;
         }
     }
@@ -84,10 +90,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.MyViewHolder> 
             default:
                 throw new IllegalStateException("Illegal tile background");
         }
-    }
-
-    private boolean isGreen(int position) {
-        return position / 8 % 2 == 0 ^ position % 2 == 0;
     }
 
     @Override
@@ -119,7 +121,6 @@ public class GameAdapter extends RecyclerView.Adapter<GameAdapter.MyViewHolder> 
                 + position + " tile no: " + textView.getText());
 
         game.resolveClick(new Coordinates(position));
-        // update();
     }
 
     public void update() {

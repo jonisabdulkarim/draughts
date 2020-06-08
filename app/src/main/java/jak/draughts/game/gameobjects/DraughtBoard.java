@@ -1,7 +1,5 @@
 package jak.draughts.game.gameobjects;
 
-import android.util.Log;
-
 import androidx.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
@@ -16,8 +14,10 @@ public class DraughtBoard extends Board {
     // constants for board tiles
     private static final int ROWS = 8;
     private static final int COLUMNS = 8;
-    private static final int RED_ROW_START = 2;
+    private static final int RED_KING_ROW = 0;
+    private static final int RED_ROW_END = 2;
     private static final int WHITE_ROW_END = 5;
+    private static final int WHITE_KING_ROW = 7;
 
     private List<List<DraughtTile>> board;
 
@@ -47,7 +47,7 @@ public class DraughtBoard extends Board {
         if (coords.isGreen()) {
             color = TileColor.GREEN;
 
-            if (row <= RED_ROW_START) {
+            if (row <= RED_ROW_END) {
                 piece = new DraughtPiece(true, false, coords);
             } else if (row >= WHITE_ROW_END) {
                 piece = new DraughtPiece(false, false, coords);
@@ -80,8 +80,8 @@ public class DraughtBoard extends Board {
 
     @Override
     public void readDataSet(List<Integer> dataSet, Coordinates movedPieceCoords) {
-        // TODO: code: upgrades to king, test: all
         DraughtPiece movedPiece = getPiece(movedPieceCoords);
+
         for (int i = 0; i < ROWS; i++) {
             for (int j = 0; j < COLUMNS; j++) {
                 Coordinates coords = new Coordinates(i, j);
@@ -93,12 +93,30 @@ public class DraughtBoard extends Board {
                         remove(coords);
                     } else {
                         put(movedPiece, coords);
+                        upgradeToKing(movedPiece);
                     }
                 }
             }
         }
 
         setDataSet(dataSet);
+    }
+
+    /**
+     * Checks if the given piece can be upgraded to king,
+     * and if true, upgrades it.
+     *
+     * @param piece given piece to check
+     */
+    public void upgradeToKing(DraughtPiece piece) {
+        if (!piece.isKing()) {
+            int row = piece.getCoordinates().getX();
+            if (piece.isRed() && row == WHITE_KING_ROW) {
+                piece.setKing(true);
+            } else if (!piece.isRed() && row == RED_KING_ROW) {
+                piece.setKing(true);
+            }
+        }
     }
 
     /**
