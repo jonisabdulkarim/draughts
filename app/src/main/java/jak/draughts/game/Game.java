@@ -89,6 +89,12 @@ public abstract class Game {
      */
     public abstract void endTurn();
 
+    /**
+     * Sends an updated dataSet to the database after each move. Does not
+     * update the turn status. This method will be used in games that can
+     * have multiple moves in one turn i.e. capturing moves in draughts.
+     */
+    public abstract void endMove();
 
     /**
      * Confirms whether the game has ended. Must be run at the beginning of

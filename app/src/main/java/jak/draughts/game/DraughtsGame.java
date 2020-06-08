@@ -23,10 +23,11 @@ public class DraughtsGame extends Game {
     private DraughtPiece selectedPiece;
     private Coordinates lastMovedPieceCoords;
 
-    private int turn;
+    private int turn; // turn number
     private boolean isMyTurn; // true if it's player's turn
     private boolean isRed; // true if player controls red pieces
     private boolean mustCapture; // true if player can/must capture
+    private char lastMove; // {'M', 'C'}
 
     DraughtsGame(String roomId, int turn) {
         TAG = getClass().getName();
@@ -95,7 +96,6 @@ public class DraughtsGame extends Game {
     }
 
     public void setFirstTurn() {
-        Log.d(TAG, "FIRST TURN IS SET.");
         if (room.getTurn() == this.turn) {
             isRed = true;
             isMyTurn = true;
@@ -110,18 +110,15 @@ public class DraughtsGame extends Game {
         if (!isMyTurn) return; // take no action
 
         if (hasSelectedPiece()) {
-            // TODO: capture
             if (!board.isEmpty(clickCoords)) {
                 deSelect();
             } else {
                 makeMove(clickCoords);
             }
         } else {
-            // TODO: canAnyCapture
             select(clickCoords);
         }
-        // TODO: endTurn
-        // endTurn();
+
         adapter.update();
     }
 
@@ -130,8 +127,7 @@ public class DraughtsGame extends Game {
         switch (tile.getTileColor()) {
             case CAPTURE_SELECT:
                 lastMovedPieceCoords = board.capture(selectedPiece, coords);
-                deSelect();
-                endTurn(); // TODO: multiple captures
+                captureAgain();
                 break;
             case SELECTED:
                 lastMovedPieceCoords = board.move(selectedPiece, coords);
@@ -140,6 +136,17 @@ public class DraughtsGame extends Game {
                 break;
             default:
                 deSelect();
+        }
+    }
+
+    private void captureAgain() {
+        board.deselect();
+        if (canCapture(selectedPiece, true)) {
+            board.writeDataSet();
+            endMove();
+        } else {
+            deSelect();
+            endTurn();
         }
     }
 
@@ -277,8 +284,14 @@ public class DraughtsGame extends Game {
     }
 
     @Override
+    public void endMove() {
+        room.setDataSet(board.getDataSet());
+        room.setMovedPiece(lastMovedPieceCoords);
+        database.setRoom(room);
+    }
+
+    @Override
     public void endTurn() {
-        Log.d(TAG, "TURN IS ENDED.");
         isMyTurn = false;
         room.setTurn(room.getTurn() == 0 ? 1 : 0);
         room.setDataSet(board.getDataSet());
