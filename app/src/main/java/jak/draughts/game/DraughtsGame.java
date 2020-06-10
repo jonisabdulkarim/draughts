@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.List;
 
 import jak.draughts.Coordinates;
+import jak.draughts.Room;
 import jak.draughts.TileColor;
 import jak.draughts.game.gameobjects.DraughtBoard;
 import jak.draughts.game.gameobjects.DraughtPiece;
@@ -37,13 +38,18 @@ public class DraughtsGame extends Game {
         this.selectedPiece = null;
     }
 
-
     @Override
     public void updateBoard() {
         if (room.getTurn() == this.turn) {
             isMyTurn = true;
+            Log.d(TAG, "playerBlocked(): " + playerBlocked() + ", canAnyMove():" + canAnyMove() + ", canAnyCapture():" + canAnyCapture());
+            gameOver(); // check gameOver at beginning of round
         }
 
+        updateBoardData();
+    }
+
+    private void updateBoardData() {
         List<Integer> roomDataSet = room.getDataSet();
         lastMovedPieceCoords = room.getMovedPiece();
         if (roomDataSet != null) {
@@ -52,7 +58,6 @@ public class DraughtsGame extends Game {
             logBoard(roomDataSet);
         }
     }
-
 
     /**
      * Debugging method that displays the board according to the database.
@@ -76,7 +81,7 @@ public class DraughtsGame extends Game {
             }
             sb.append("\n");
         }
-        Log.d("BOARD", "\n\n" + sb.toString());
+        Log.d(TAG, "Board: \n" + sb.toString());
     }
 
     @Override
@@ -308,11 +313,7 @@ public class DraughtsGame extends Game {
     }
 
     private boolean playerBlocked() {
-        if (canAnyCapture() || canAnyMove()) {
-            return true;
-        } else {
-            return false;
-        }
+        return !canAnyCapture() && !canAnyMove();
     }
 
     private boolean canAnyMove() {
@@ -345,12 +346,17 @@ public class DraughtsGame extends Game {
     @Override
     public boolean gameOver() {
         if (playerBlocked()) {
-            room.setStatus(4);
-            endTurn();
+            room.setTurn(Room.STOP);
+            room.setStatus(Room.RESULT);
+            endGame();
             return true;
         } else {
             return false;
         }
+    }
+
+    private void endGame() {
+        Log.d(TAG, "Game is over!");
     }
 
     @Override

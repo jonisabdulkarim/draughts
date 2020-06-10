@@ -12,6 +12,7 @@ public class Room {
     public static final int RESULT = 4;
 
     // turn: int
+    public static final int STOP = -1; // i.e. game over in draughts
     public static final int HOST = 0;
     public static final int JOIN = 1;
 
