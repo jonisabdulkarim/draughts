@@ -13,26 +13,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import jak.draughts.R;
 import jak.draughts.Room;
+import jak.draughts.User;
 import jak.draughts.room.RoomActivity;
 
 public class LobbyActivity extends AppCompatActivity {
 
     LobbyDatabase database;
     List<Room> rooms;
+    Map<String, User> users;
     Room selectedRoom;
 
     LobbyAdapter lobbyAdapter;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-
-    private static final int ROOM_VACANT = 0;
-    private static final int ROOM_FULL = 1;
-    private static final int ROOM_READY = 2;
-    private static final int ROOM_PLAYING = 3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +56,10 @@ public class LobbyActivity extends AppCompatActivity {
      */
     private void initialiseDatabase() {
         rooms = new ArrayList<>();
+        users = new HashMap<>();
         database = new LobbyDatabase(this);
         // database.initialiseRooms(); todo: remove test data when done
-        database.fetchUpdates(rooms);
+        database.fetchUpdates(rooms, users);
     }
 
     /**
@@ -75,7 +75,7 @@ public class LobbyActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(
                 recyclerView.getContext(), DividerItemDecoration.VERTICAL));
 
-        lobbyAdapter = new LobbyAdapter(this, rooms);
+        lobbyAdapter = new LobbyAdapter(this, rooms, users);
         recyclerView.setAdapter(lobbyAdapter);
     }
 
@@ -85,7 +85,7 @@ public class LobbyActivity extends AppCompatActivity {
      * "refresh" button
      */
     public void refresh() {
-        database.fetchUpdates(rooms);
+        database.fetchUpdates(rooms, users);
     }
 
     /**
@@ -128,7 +128,7 @@ public class LobbyActivity extends AppCompatActivity {
         if (selectedRoom == null) {
             // TODO: popup: "must select room before joining"
 
-        } else if (selectedRoom.getStatus() == ROOM_VACANT) {
+        } else if (selectedRoom.getStatus() == Room.VACANT) {
             String roomId = selectedRoom.getRoomId();
             database.joinRoom(roomId);
 

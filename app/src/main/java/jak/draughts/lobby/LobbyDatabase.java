@@ -23,11 +23,6 @@ public class LobbyDatabase  {
     private FirebaseFirestore database;
     private LobbyActivity lobbyActivity;
 
-    private static final int ROOM_VACANT = 0;
-    private static final int ROOM_FULL = 1;
-    private static final int ROOM_READY = 2;
-    private static final int ROOM_PLAYING = 3;
-
     public LobbyDatabase(LobbyActivity lobbyActivity) {
         this.lobbyActivity = lobbyActivity;
         this.database = FirebaseFirestore.getInstance();
@@ -41,7 +36,7 @@ public class LobbyDatabase  {
      *
      * @param rooms
      */
-    public void fetchUpdates(final List<Room> rooms) {
+    public void fetchUpdates(final List<Room> rooms, final Map<String, User> users) {
         database.collection("rooms")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -58,7 +53,7 @@ public class LobbyDatabase  {
                             Log.w("FAIL", "Error getting documents.", task.getException());
                         }
 
-                        lobbyActivity.update();
+                        getUsers(users);
                     }
                 });
     }
@@ -87,7 +82,7 @@ public class LobbyDatabase  {
             room.setGameMode("D");
             room.setUserHostId(user1.getId());
             room.setUserJoinId(user2.getId());
-            room.setStatus(ROOM_FULL);
+            room.setStatus(Room.FULL);
             ref = database.collection("rooms").document();
             room.setRoomId(ref.getId());
             ref.set(room);
@@ -104,7 +99,7 @@ public class LobbyDatabase  {
         Room room = new Room();
         room.setGameMode("D");
         room.setUserHostId(user1.getId());
-        room.setStatus(ROOM_VACANT);
+        room.setStatus(Room.VACANT);
         ref = database.collection("rooms").document();
         room.setRoomId(ref.getId());
         ref.set(room);
@@ -124,16 +119,22 @@ public class LobbyDatabase  {
         Room room = new Room();
         room.setRoomId(ref.getId());
         room.setUserHostId(createUser().getId());
-        room.setStatus(ROOM_VACANT);
+        room.setStatus(Room.VACANT);
 
         ref.set(room);
         return room.getRoomId();
     }
 
+    /**
+     * Sets the given room to status FULL and creates a
+     * new joinUser.
+     *
+     * @param roomId
+     */
     public void joinRoom(String roomId) {
         Map<String, Object> roomFields = new HashMap<>();
         roomFields.put("userJoinId", createUser().getId());
-        roomFields.put("status", ROOM_FULL);
+        roomFields.put("status", Room.FULL);
 
         database.collection("rooms").document(roomId).update(roomFields);
     }
@@ -165,5 +166,32 @@ public class LobbyDatabase  {
     public boolean listenForChanges() {
         // TODO
         return false;
+    }
+
+    /**
+     * Gets all users from the "users" collection in the database,
+     * and places them in the given, cleared HashMap.
+     *
+     * @param users hashMap which will stores {User.userId: User}
+     */
+    public void getUsers(final Map<String, User> users) {
+        database.collection("users").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            users.clear();
+
+                            for (QueryDocumentSnapshot doc : task.getResult()) {
+                                User user = doc.toObject(User.class);
+                                users.put(user.getId(), user);
+                            }
+                        } else {
+                            Log.w("FAIL", "Error getting documents.", task.getException());
+                        }
+
+                        lobbyActivity.update();
+                    }
+                });
     }
 }
