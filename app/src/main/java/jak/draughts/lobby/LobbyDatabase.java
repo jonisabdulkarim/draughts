@@ -69,7 +69,7 @@ public class LobbyDatabase  {
                 "Guy", "Hector", "India", "Julia", "Kevin", "Liam"
         };
 
-        for (int i = 0; i < 10; i+=2) {
+        for (int i = 0; i < 10; i += 2) {
             // TODO: room test data
             User user1 = new User();
             user1.setName(arr[i]);
@@ -78,7 +78,7 @@ public class LobbyDatabase  {
             ref.set(user1);
 
             User user2 = new User();
-            user2.setName(arr[i+1]);
+            user2.setName(arr[i + 1]);
             ref = database.collection("users").document();
             user2.setId(ref.getId());
             ref.set(user2);

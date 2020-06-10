@@ -67,10 +67,10 @@ public class DraughtBoard extends Board {
         List<Integer> dataSet = new ArrayList<>(COLUMNS * ROWS);
         List<TileColor> backgroundSet = new ArrayList<>(COLUMNS * ROWS);
 
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLUMNS; j++) {
-                dataSet.add(board.get(i).get(j).getType());
-                backgroundSet.add(board.get(i).get(j).getTileColor());
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
+                dataSet.add(board.get(row).get(col).getType());
+                backgroundSet.add(board.get(row).get(col).getTileColor());
             }
         }
 
@@ -82,9 +82,9 @@ public class DraughtBoard extends Board {
     public void readDataSet(List<Integer> dataSet, Coordinates movedPieceCoords) {
         DraughtPiece movedPiece = getPiece(movedPieceCoords);
 
-        for (int i = 0; i < ROWS; i++) {
-            for (int j = 0; j < COLUMNS; j++) {
-                Coordinates coords = new Coordinates(i, j);
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLUMNS; col++) {
+                Coordinates coords = new Coordinates(row, col);
                 int newType = dataSet.get(coords.getPosition());
                 int currentType = getTile(coords).getType();
 
@@ -129,6 +129,15 @@ public class DraughtBoard extends Board {
         getTile(coords).setTileColor(tileColor);
     }
 
+    /**
+     * Convenience method that moves the capturing piece to the given
+     * coordinate, and removes the captured piece in between. Returns
+     * the coordinate of the given piece before it was moved.
+     *
+     * @param piece the capturing piece
+     * @param newCoords coordinates of destination tile
+     * @return coordinates of the tile the capturing piece is moved from
+     */
     public Coordinates capture(DraughtPiece piece, Coordinates newCoords) {
         Coordinates oldCoords = piece.getCoordinates();
         remove(newCoords.middle(oldCoords));
@@ -269,6 +278,13 @@ public class DraughtBoard extends Board {
         return board.get(coordinates.getX()).get(coordinates.getY());
     }
 
+    /**
+     * Returns all pieces on the board that matches the given
+     * isRed value, i.e. red pieces if set to true.
+     *
+     * @param isRed the team of this player
+     * @return list of red pieces if isRed is true, white pieces otherwise
+     */
     public List<DraughtPiece> getTeamPieces(boolean isRed) {
         List<DraughtPiece> pieces = new LinkedList<>();
         for (int row = 0; row < ROWS; row++) {

@@ -9,6 +9,7 @@ public class Room {
     public static final int FULL = 1;
     public static final int READY = 2;
     public static final int PLAYING = 3;
+    public static final int RESULT = 4;
 
     // turn: int
     public static final int HOST = 0;

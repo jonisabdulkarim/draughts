@@ -18,10 +18,10 @@ import jak.draughts.Room;
 
 public class GameDatabase {
 
-    Game game;
-    String TAG;
-    FirebaseFirestore database;
-    ListenerRegistration roomListener;
+    private Game game;
+    private String TAG;
+    private FirebaseFirestore database;
+    private ListenerRegistration roomListener;
 
     GameDatabase(Game game) {
         TAG = Room.class.getName();
@@ -86,10 +86,18 @@ public class GameDatabase {
         });
     }
 
+    /**
+     * Updates the given room.
+     *
+     * @param room the room object to update
+     */
     public void setRoom(Room room) {
         database.collection("rooms").document(room.getRoomId()).set(room);
     }
 
+    /**
+     * Detaches the room listeners.
+     */
     public void detachListeners() {
         roomListener.remove();
     }
