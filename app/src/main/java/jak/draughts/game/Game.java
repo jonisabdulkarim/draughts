@@ -18,9 +18,9 @@ import jak.draughts.TileColor;
  */
 public abstract class Game {
 
-    protected Room room;
-    protected GameDatabase database;
-    protected GameAdapter adapter;
+    private Room room;
+    private GameDatabase database;
+    private GameAdapter adapter;
 
     public static Game chooseGameMode(String mode, String roomId, int turn) {
         switch(mode) {
@@ -35,9 +35,9 @@ public abstract class Game {
     }
 
     public void initialiseDatabase(String roomId) {
-        database = new GameDatabase(this);
-        database.getRoom(roomId);
-        database.listenForChanges(roomId);
+        setDatabase(new GameDatabase(this));
+        getDatabase().getRoom(roomId);
+        getDatabase().listenForChanges(roomId);
     }
 
     public Room getRoom() {
@@ -54,6 +54,14 @@ public abstract class Game {
 
     public void setAdapter(GameAdapter adapter) {
         this.adapter = adapter;
+    }
+
+    public GameDatabase getDatabase() {
+        return database;
+    }
+
+    public void setDatabase(GameDatabase database) {
+        this.database = database;
     }
 
     public abstract List<Integer> getDataSet();
@@ -108,6 +116,6 @@ public abstract class Game {
      * real-time listeners from the database.
      */
     public void stopGame() {
-        database.detachListeners();
+        getDatabase().detachListeners();
     }
 }

@@ -40,7 +40,7 @@ public class DraughtsGame extends Game {
 
     @Override
     public void updateBoard() {
-        if (room.getTurn() == this.turn) {
+        if (getRoom().getTurn() == this.turn) {
             isMyTurn = true;
             Log.d(TAG, "playerBlocked(): " + playerBlocked() + ", canAnyMove():" + canAnyMove() + ", canAnyCapture():" + canAnyCapture());
             gameOver(); // check gameOver at beginning of round
@@ -50,11 +50,11 @@ public class DraughtsGame extends Game {
     }
 
     private void updateBoardData() {
-        List<Integer> roomDataSet = room.getDataSet();
-        lastMovedPieceCoords = room.getMovedPiece();
+        List<Integer> roomDataSet = getRoom().getDataSet();
+        lastMovedPieceCoords = getRoom().getMovedPiece();
         if (roomDataSet != null) {
             board.readDataSet(roomDataSet, lastMovedPieceCoords);
-            adapter.update();
+            getAdapter().update();
             logBoard(roomDataSet);
         }
     }
@@ -67,7 +67,7 @@ public class DraughtsGame extends Game {
      * @param roomDataSet integer list representing the board
      */
     private void logBoard(List<Integer> roomDataSet) {
-        Log.d(TAG, "Room turn: " + room.getTurn() + ", game turn: " + turn
+        Log.d(TAG, "Room turn: " + getRoom().getTurn() + ", game turn: " + turn
                 + ", isMyTurn = " + isMyTurn + ".");
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < 8; row++) {
@@ -86,7 +86,7 @@ public class DraughtsGame extends Game {
 
     @Override
     public void setFirstTurn() {
-        if (room.getTurn() == this.turn) {
+        if (getRoom().getTurn() == this.turn) {
             isRed = true;
             isMyTurn = true;
         } else {
@@ -109,7 +109,7 @@ public class DraughtsGame extends Game {
             select(clickCoords); // select piece/highlight tiles
         }
 
-        adapter.update();
+        getAdapter().update();
     }
 
     private void makeMove(Coordinates coords) {
@@ -329,25 +329,25 @@ public class DraughtsGame extends Game {
 
     @Override
     public void endMove() {
-        room.setDataSet(board.getDataSet());
-        room.setMovedPiece(lastMovedPieceCoords);
-        database.setRoom(room);
+        getRoom().setDataSet(board.getDataSet());
+        getRoom().setMovedPiece(lastMovedPieceCoords);
+        getDatabase().setRoom(getRoom());
     }
 
     @Override
     public void endTurn() {
         isMyTurn = false;
-        room.setTurn(room.getTurn() == 0 ? 1 : 0);
-        room.setDataSet(board.getDataSet());
-        room.setMovedPiece(lastMovedPieceCoords);
-        database.setRoom(room);
+        getRoom().setTurn(getRoom().getTurn() == 0 ? 1 : 0);
+        getRoom().setDataSet(board.getDataSet());
+        getRoom().setMovedPiece(lastMovedPieceCoords);
+        getDatabase().setRoom(getRoom());
     }
 
     @Override
     public boolean gameOver() {
         if (playerBlocked()) {
-            room.setTurn(Room.STOP);
-            room.setStatus(Room.RESULT);
+            getRoom().setTurn(Room.STOP);
+            getRoom().setStatus(Room.RESULT);
             endGame();
             return true;
         } else {

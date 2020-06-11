@@ -2,38 +2,44 @@ package jak.draughts.game;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.function.ThrowingRunnable;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import jak.draughts.Coordinates;
+import jak.draughts.Room;
 import jak.draughts.TileColor;
+import jak.draughts.game.gameobjects.DraughtBoard;
 import jak.draughts.game.gameobjects.DraughtPiece;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class DraughtsGameTest {
 
-    private Game game;
+    @Mock private GameDatabase database;
+    @Mock private GameAdapter adapter;
+
+    @Spy private DraughtBoard board;
+    @Mock private DraughtPiece selectedPiece = null;
+    @Mock private Coordinates lastMovedPieceCoords;
+
+    @InjectMocks private DraughtsGame game = new DraughtsGame("", 0);
+
     private Coordinates redManOccupiedCoords = new Coordinates(2, 1);
-    private String roomId;
 
     @Before
     public void setUp() {
-        game = Game.chooseGameMode("GAYP", roomId, 0);
+
     }
 
     @Test
     public void chooseGameMode() {
-        // throw exception for illegal game modes
-        assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
-            @Override
-            public void run() {
-                Game.chooseGameMode("GAYP", roomId, -1);
-            }
-        });
 
-        // create draught's game
-        game = Game.chooseGameMode("GAYP", roomId, 0);
-        assertTrue(game instanceof DraughtsGame);
     }
 
     @Test
@@ -95,5 +101,45 @@ public class DraughtsGameTest {
 
     @Test
     public void gameOver() {
+    }
+
+    @Test
+    public void initialiseDatabase() {
+    }
+
+    @Test
+    public void getRoom() {
+    }
+
+    @Test
+    public void setRoom() {
+    }
+
+    @Test
+    public void getAdapter() {
+    }
+
+    @Test
+    public void setAdapter() {
+    }
+
+    @Test
+    public void stopGame() {
+    }
+
+    @Test
+    public void setFirstTurn() {
+    }
+
+    @Test
+    public void endMove() {
+    }
+
+    @Test
+    public void getDataSet() {
+    }
+
+    @Test
+    public void getBackgroundSet() {
     }
 }

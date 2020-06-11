@@ -24,7 +24,7 @@ public class GameDatabase {
     private ListenerRegistration roomListener;
 
     GameDatabase(Game game) {
-        TAG = Room.class.getName();
+        TAG = GameDatabase.class.getName();
         this.game = game;
         database = FirebaseFirestore.getInstance();
     }
