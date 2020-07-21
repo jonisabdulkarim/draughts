@@ -16,4 +16,8 @@ command, while the game itself uses real-time listeners to check for updates.
 3. Download and place google-services.json in draughts/app directory
 4. Build project using gradlew
 5. Run project with emulator on Android Studio
+<p>
 Note: You'll need two emulators for a multiplayer game!
+
+# screenshots
+<img src="screenshots/Screenshot_1595326681.png" alt="Main Menu" width="200"/><img src="screenshots/Screenshot_1595326693.png" alt="Lobby" width="200"/><img src="screenshots/Screenshot_1595326723.png" alt="Room" width="200"/><img src="screenshots/Screenshot_1595326841.png" alt="Game" width="200"/>
